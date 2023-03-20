@@ -13,7 +13,7 @@ DEP := $(OBJ:%.o=%.d)
 
 CC := cc
 CFLAGS := -Wall -Werror -Wextra $(INCLUDE)
-LDFLAGS := -O3
+LDFLAGS := -O3 -lreadline
 
 # Rules
 
