@@ -54,7 +54,7 @@ ft_lstclear_bonus.c \
 ft_lstiter_bonus.c \
 ft_lstmap_bonus.c \
 \
-dynarr.c \
+buf.c \
 get_next_line.c \
 \
 ft_printf.c \
