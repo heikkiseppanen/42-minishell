@@ -7,6 +7,7 @@ OBJDIR := ./obj
 
 SRC :=\
 main.c \
+signal.c \
 
 OBJ := $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 DEP := $(OBJ:%.o=%.d)
@@ -22,7 +23,7 @@ FT_LD := -L ./third-party/libft -lft
 CC := cc
 INCLUDE := -I $(FT_DIR) -I $(SRCDIR)
 CFLAGS := -Wall -Werror -Wextra $(INCLUDE)
-LDFLAGS := -O3 -lreadline $(FT_LD)
+LDFLAGS := -O3 -L $(HOME)/.brew/Cellar/readline/8.2.1/lib -lreadline -lhistory $(FT_LD)
 
 # Rules
 
