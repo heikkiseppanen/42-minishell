@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "sig.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <readline/readline.h>
@@ -21,6 +22,7 @@ int	main(void)
 
 	rl_bind_key('\t', rl_complete);
 	using_history();
+	init_sighandler();
 	while (1)
 	{
 		input = readline("> ");
