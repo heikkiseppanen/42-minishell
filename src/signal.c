@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:29:23 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/04/03 15:02:22 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/04/05 17:26:29 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,25 @@
 #include <sys/ioctl.h>
 #include <termios.h>
 
-void	return_prompt(void)
+static void	delete_esc_char(void)
 {
-	write(1, "\n", 1);
+	write(1, "\033[1C\033[K\n", 9);
+}
+
+static void	clear_line(void)
+{
 	rl_on_new_line();
+	rl_replace_line("", 0);
 	rl_redisplay();
 }
 
-void	clear_line(void)
-{
-	rl_replace_line("", 1);
-	rl_redisplay();
-}
-
-void	sig_handler(int signum)
+static void	sig_handler(int signum)
 {
 	if (signum == SIGINT)
-		return_prompt();
+	{
+		delete_esc_char();
+		clear_line();
+	}
 }
 
 void	init_sighandler(void)
