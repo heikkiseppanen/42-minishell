@@ -71,7 +71,7 @@ OBJ := $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 DEP := $(OBJ:%.o=.d)
 
 CC := cc
-CFLAGS := -O3 -I./ -Wall -Wextra -Werror
+CFLAGS := -O3 -I./ -Wall -Werror -Wextra
 
 all: $(NAME)
 
