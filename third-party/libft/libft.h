@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 12:04:10 by hseppane          #+#    #+#             */
-/*   Updated: 2023/03/20 09:33:39 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/04/26 13:58:53 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,21 @@
 # include <unistd.h> // write()
 
 # define STDOUT_FD 1
+# define FNV_PRIME 0x100000001b3
+# define FNV_OFFSET 0xcbf29ce484222325
+
+typedef struct s_htelem
+{
+        const char      *key;
+        void            *value;
+}       t_htelem;
+
+typedef struct s_htable
+{
+        t_htelem        **memory;
+        size_t          size;
+        size_t          cap;
+}       t_htable;
 
 typedef struct s_list
 {
@@ -39,6 +54,17 @@ void	ft_lstclear(t_list **lst, void (*del)(void *));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 
 int		ft_lstsize(t_list *lst);
+
+// HASHTABLE
+
+long long	get_message_hash(const char *message);
+int		ft_htable_insert(t_htable *table, const char *key, void *value);
+int		ft_restructure_table(t_htable *table, const char *key, void *value);
+int		ft_probe_table(t_htable *table, const char *key, void *value);
+t_htable	*ft_htable_create(unsigned int init_size);
+int		ft_htable_insert(t_htable *table, const char *key, void *value);
+void		*ft_htable_get(t_htable *table, const char *key);
+void		ft_print_htable(t_htable *table);
 
 // C TYPE
 
