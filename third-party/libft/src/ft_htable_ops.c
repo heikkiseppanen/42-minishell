@@ -41,7 +41,6 @@ int	ft_htable_insert(t_htable *table, const char *key, void *value)
 void	*ft_htable_get(t_htable *table, const char *key)
 {
 	unsigned long long	key_hash;
-	void				*content;
 	t_htelem			*orig_elem;
 
 	if (!table || !key)
