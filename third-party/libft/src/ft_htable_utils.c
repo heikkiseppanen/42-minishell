@@ -31,7 +31,7 @@ long long	get_message_hash(const char *message)
 int	ft_restructure_table(t_htable *table, const char *key, void *value)
 {
 	t_htable	*tmp;
-	int			i;
+	unsigned int			i;
 
 	tmp = ft_htable_create(table->cap * 2);
 	if (!tmp)
