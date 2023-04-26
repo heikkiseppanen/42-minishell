@@ -61,7 +61,7 @@ void	*ft_htable_get(t_htable *table, const char *key)
 
 void	ft_print_htable(t_htable *table)
 {
-	int	i;
+	unsigned int	i;
 
 	i = 0;
 	while (i < table->cap)
