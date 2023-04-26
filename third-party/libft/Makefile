@@ -64,12 +64,14 @@ ft_putdec.c \
 ft_putptr.c \
 ft_write_str.c \
 ft_write_char.c \
+ft_htable_ops.c \
+ft_htable_utils.c \
 
 OBJ := $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 DEP := $(OBJ:%.o=.d)
 
 CC := cc
-CFLAGS := -O3 -I./ -Wall -Werror -Wextra
+CFLAGS := -O3 -I./ -Wall -Wextra -Werror
 
 all: $(NAME)
 
