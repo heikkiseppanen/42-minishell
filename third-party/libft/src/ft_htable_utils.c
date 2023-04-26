@@ -55,23 +55,25 @@ int	ft_restructure_table(t_htable *table, const char *key, void *value)
 int	ft_probe_table(t_htable *table, const char *key, void *value)
 {
 	unsigned long long	key_hash;
+	unsigned long long     index;
 
 	key_hash = get_message_hash(key);
 	while (1)
 	{
-		if (!table->memory[key_hash % table->cap])
+	        index = key_hash % table->cap;
+		if (!table->memory[index])
 		{
-			table->memory[key_hash % table->cap] = malloc(sizeof(t_htelem));
-			table->memory[key_hash % table->cap]->key = key;
-			table->memory[key_hash % table->cap]->value = value;
+			table->memory[index] = malloc(sizeof(t_htelem));
+			table->memory[index]->key = key;
+			table->memory[index]->value = value;
 			table->size++;
 			break ;
 		}
-		else if (!ft_strncmp(key, table->memory[key_hash % table->cap]->key, \
+		else if (!ft_strncmp(key, table->memory[index]->key, \
 					ft_strlen(key)))
 		{
-			free(table->memory[key_hash % table->cap]->value);
-			table->memory[key_hash % table->cap]->value = value;
+			free(table->memory[index]->value);
+			table->memory[index]->value = value;
 			break ;
 		}
 		key_hash++;
