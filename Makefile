@@ -8,6 +8,13 @@ OBJDIR := ./obj
 SRC :=\
 main.c \
 signal.c \
+token.c \
+lexer.c \
+interpreter.c \
+redirection.c \
+pipe.c \
+ast.c \
+sym.c \
 
 OBJ := $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 DEP := $(OBJ:%.o=%.d)
@@ -21,7 +28,7 @@ FT_LD := -L ./third-party/libft -lft
 # Compilation 
 
 CC := cc
-INCLUDE := -I $(FT_DIR) -I $(SRCDIR)
+INCLUDE := -I $(FT_DIR) -I $(SRCDIR)/include
 CFLAGS := -Wall -Werror -Wextra $(INCLUDE)
 LDFLAGS := -O3 -L $(HOME)/.brew/Cellar/readline/8.2.1/lib -lreadline -lhistory $(FT_LD)
 
@@ -32,7 +39,7 @@ all: $(NAME)
 run: all
 	./$(NAME)
 
-debug: CFLAG+= -g -fsanitize=address
+debug: CFLAGS+= -g -fsanitize=address
 debug: LDFLAGS+= -fsanitize=address
 debug: $(NAME)
 
