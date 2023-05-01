@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   typedef.h                                          :+:      :+:    :+:   */
+/*   pipe.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/21 10:50:46 by hseppane          #+#    #+#             */
-/*   Updated: 2023/03/21 10:56:45 by hseppane         ###   ########.fr       */
+/*   Created: 2023/04/25 12:48:13 by hseppane          #+#    #+#             */
+/*   Updated: 2023/04/27 13:09:17 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TYPEDEF_H
-# define TYPEDEF_H
+#ifndef PIPE_H
+# define PIPE_H
 
-typedef enum e_bool
-{
-	MS_FALSE = 0,
-	MS_TRUE = 1
-}	t_bool;
+# include "typedef.h"
 
-typedef enum e_err
+typedef struct s_pipe
 {
-	MS_SUCCESS = 0,
-}	t_err;
+	int	read;
+	int	write;
+} t_pipe;
+
+e_err	pipe_init(t_pipe *empty);
+e_err	pipe_close(t_pipe *pipe);
+
+e_err	pipe_connect(int source, int target, int unused);
 
 #endif

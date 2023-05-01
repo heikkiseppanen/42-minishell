@@ -6,12 +6,13 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:29:23 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/04/03 15:02:22 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/04/25 10:44:33 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sig.h"
 #include <signal.h>
+#include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <unistd.h>
