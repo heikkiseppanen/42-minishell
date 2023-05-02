@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:29:23 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/04/25 10:44:33 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/02 09:29:08 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,8 @@
 void	return_prompt(void)
 {
 	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-void	clear_line(void)
-{
 	rl_replace_line("", 1);
+	rl_on_new_line();
 	rl_redisplay();
 }
 

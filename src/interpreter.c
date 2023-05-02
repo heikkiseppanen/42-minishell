@@ -6,18 +6,23 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 13:58:38 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/01 08:58:20 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/02 18:49:56 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interpreter.h"
 #include "ast.h"
+#include "libft.h"
 #include "pipe.h"
 #include "redirection.h"
+#include "expand.h"
+#include "builtins.h"
 
 #include <unistd.h>
 #include <sys/wait.h>
 #include <stdio.h>
+
+extern char	**environ;
 
 e_err	perform_redirections(t_ast_node *redirections)
 {
@@ -39,27 +44,43 @@ e_err	perform_redirections(t_ast_node *redirections)
 	return (MS_SUCCESS);
 }
 
+t_htable	*init_builtins()
+{
+	t_htable	*builtins;
+
+	builtins = ft_htable_create(8);
+	ft_htable_insert(builtins, "echo", echo);
+	ft_htable_insert(builtins, "cd", change_directory);
+	ft_htable_insert(builtins, "pwd", put_cwd);
+	ft_htable_insert(builtins, "export", export_var);
+	ft_htable_insert(builtins, "env", put_env);
+	return (builtins);
+}
+
 pid_t	launch_command(t_ast_node *command, t_pipe *in, t_pipe *out)
 {
 	const pid_t			process = fork();
 	t_ast_args *const	arguments = &ast_left(command)->data.args;
+	char				**expanded_args;
+	static t_htable		*builtins = NULL;
+	int	(*fun_ptr)(char **) = NULL;
 
+	if (!builtins)
+		builtins = init_builtins();
 	if (process == -1)
-	{
 		perror("Failed to fork process");
-	}
 	else if (process == 0)
 	{
 		if (in != NULL)
-		{
 			pipe_connect(in->read, STDIN_FILENO, in->write);
-		}
 		if (out != NULL)
-		{
 			pipe_connect(out->write, STDOUT_FILENO, out->read);
-		}
 		perform_redirections(ast_right(command));
-		execve(arguments->argv[0], arguments->argv, NULL);
+		expanded_args = expand_arglist(arguments->argv);
+		fun_ptr = *((int (*)(char **))(ft_htable_get(builtins, expanded_args[0])));
+		if (fun_ptr)
+			exit (fun_ptr(expanded_args));
+		execve(expanded_args[0], expanded_args, environ);
 		perror("Failed to execute command");
 		exit(127);
 	}
@@ -70,7 +91,6 @@ e_err	execute_command(t_ast_node *command)
 {
 	pid_t				process;
 	int					exit_status;
-
 	process = launch_command(command, NULL, NULL);
 	if (process == -1)
 	{

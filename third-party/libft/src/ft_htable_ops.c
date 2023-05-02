@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 13:54:37 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/04/26 13:56:49 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/02 15:31:58 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,16 @@ t_htable	*ft_htable_create(unsigned int init_size)
 
 int	ft_htable_insert(t_htable *table, const char *key, void *value)
 {
-	if (!table || !key)
+	char	*dup_key;
+
+	if (!key)
+		return (-1);
+	dup_key = ft_strdup(key);
+	if (!table || !dup_key)
 		return (-1);
 	if (table->size == table->cap)
-		return (ft_restructure_table(table, key, value));
-	return (ft_probe_table(table, key, value));
+		return (ft_restructure_table(table, dup_key, value));
+	return (ft_probe_table(table, dup_key, value));
 }
 
 void	*ft_htable_get(t_htable *table, const char *key)
