@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 13:11:24 by hseppane          #+#    #+#             */
-/*   Updated: 2023/04/22 17:29:57 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/02 07:13:19 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	lexer_parse_token(t_lexer *lexer)
 		++it;
 		if (*it == '<' || *it == '>')
 		{
-			lexer->token = token_new(TOK_IO_NUMBER, begin, it - begin);
+			lexer->token = token_new(TOK_IO_DIGIT, begin, it - begin);
 		}
 		else
 		{

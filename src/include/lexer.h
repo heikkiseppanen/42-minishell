@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 08:26:08 by hseppane          #+#    #+#             */
-/*   Updated: 2023/04/22 17:22:11 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/02 07:13:19 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef enum e_token_type
 	TOK_EOF = 1,
 	TOK_WORD = 1 << 1,
 	TOK_PIPE = 1 << 2,
-	TOK_IO_NUMBER = 1 << 3,
+	TOK_IO_DIGIT = 1 << 3,
 	TOK_LESS = 1 << 4,
 	TOK_DLESS = 1 << 5,
 	TOK_GREAT = 1 << 6,

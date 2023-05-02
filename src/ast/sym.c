@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 14:37:39 by hseppane          #+#    #+#             */
-/*   Updated: 2023/04/18 14:58:15 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/02 13:26:01 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,5 @@ e_bool	char_is_digit(char c)
 
 e_bool	char_is_meta(char c)
 {
-	return (char_is_whitespace(c) 
-			|| c == '|' || c == '<' || c == '>');
+	return (char_is_whitespace(c) || c == '|' || c == '<' || c == '>');
 }
