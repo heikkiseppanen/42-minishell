@@ -6,28 +6,23 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/08 13:41:43 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/08 13:43:53 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sig.h"
 #include "tokenizer.h"
 #include "ast.h"
-
+#include "libft.h"
+#include "sig.h"
+#include "minishell.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
-typedef struct s_shell_state
-{
-	t_htable	*envp;
-	t_htable	*builtin;
-	int			pipeline_err;
-}	t_shell_state;
-
 extern char 	**environ;
-t_shell_state	state;
+t_shell_state 	g_state;
 
 t_htable	*grab_environment_variables()
 {
@@ -119,8 +114,9 @@ int	main(void)
 {
 	char	*input;
 
-	state.envp = grab_environment_variables();
-	environ = htable_to_environ(state.envp);
+	g_state.envp = grab_environment_variables();
+	ft_htable_insert(g_state.envp, "SHLVL", ft_itoa(ft_atoi(ft_htable_get(g_state.envp, "SHLVL")) + 1));
+	g_state.environ_copy = htable_to_environ(g_state.envp);
 	rl_bind_key('\t', rl_complete);
 	using_history();
 	init_sighandler();

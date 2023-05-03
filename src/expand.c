@@ -6,12 +6,15 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/02 08:28:51 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/03 17:09:25 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "../third-party/libft/libft.h"
+#include "minishell.h"
+
+extern t_shell_state g_state;
 
 char	*str_expand(const char *string)
 {
@@ -51,7 +54,8 @@ char	*str_expand(const char *string)
 			string++;
 			if (*string == '?')
 			{
-				buf_pushback(buf, "0", 1);
+				envres = ft_itoa(g_state.pipeline_err);
+				buf_pushback(buf, envres, ft_strlen(envres));
 				string++;
 				continue ;
 			}
@@ -75,7 +79,7 @@ char	*str_expand(const char *string)
 				i++;
 			}
 			env[i] = '\0';
-			envres = getenv(env);
+			envres = ft_htable_get(g_state.envp, env);
 			free(env);
 			if (!envres)
 				continue ;
