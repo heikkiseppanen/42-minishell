@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 10:32:27 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/02 09:56:00 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/04 19:50:33 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,19 @@ t_ast_node	*ast_node_new(e_ast_node_type type, u_ast_data data)
 {
 	t_ast_node	*const empty = malloc(sizeof(*empty));
 	
-	*empty = (t_ast_node){type, data};
+	empty->type = type;
+	empty->data = data;
 	return (empty);
 }
 
 void	ast_node_del(t_ast_node *node)
 {
+	if (!node)
+		return ;
 	if (node->type == AST_PIPE || node->type == AST_COMMAND)
 	{
-		if (node->data.branch.left)
-			ast_node_del(node->data.branch.left);
-		if (node->data.branch.right)
-			ast_node_del(node->data.branch.right);
+		ast_node_del(node->data.branch.left);
+		ast_node_del(node->data.branch.right);
 	}
 	if (node->type == AST_ARGS)
 		ft_strarr_del(node->data.args.argv);

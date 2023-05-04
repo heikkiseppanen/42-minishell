@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:54:20 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/02 09:54:39 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/04 19:20:24 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ e_err	unexpect(const t_token *token)
 {
 	ft_fprintf(STDERR_FILENO, "minishell: syntax error near unexpected token ");
 	ft_putchar_fd('`', STDERR_FILENO);
-	if (token->type == TOK_EOF)
+	if (token->type == TOK_NULL)
 	{
 		ft_putstr_fd("newline", STDERR_FILENO);
 	}

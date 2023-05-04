@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 11:23:45 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/02 10:07:20 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/04 18:58:30 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define  AST_H
 
 # include "typedef.h"
-# include "lexer.h"
+# include "tokenizer.h"
 # include "redirection.h"
 
 # include <libft.h>
@@ -69,9 +69,9 @@ void		ast_node_del(t_ast_node *root);
 t_ast_node	*ast_left(t_ast_node *node);
 t_ast_node	*ast_right(t_ast_node *node);
 
-e_err 		parse_parameters(t_lexer *input, t_buf *argv_out, t_buf *redir_out);
-t_ast_node	*parse_command(t_lexer *input);
-t_ast_node	*parse_pipeline(t_lexer *input);
+e_err 		parse_parameters(t_token **iterator, t_buf *argv, t_buf *redir);
+t_ast_node	*parse_command(t_token **iterator);
+t_ast_node	*parse_pipeline(t_token **iterator);
 e_err		unexpect(const t_token *token);
 
 e_err		interpret_ast(t_ast_node *root);

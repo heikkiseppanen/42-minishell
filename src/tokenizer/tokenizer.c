@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 13:11:24 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 15:11:57 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/04 15:51:58 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
+#include "tokenizer.h"
 
 #include <stdio.h>
 #include <libft.h>
@@ -19,6 +19,7 @@ static const t_token_def	*get_token_lookup_table(void)
 {
 	static const t_token_def	table[] = {
 		{'\0', TOK_NULL},
+		{'\n', TOK_NULL},
 		{'|', TOK_PIPE},
 		{'<', TOK_LESS},
 		{'>', TOK_GREAT},

@@ -9,7 +9,10 @@ INCDIR := $(SRCDIR)/include
 AST_DIR := ast
 AST_SRC :=\
 	ast.c\
-	lexer.c\
+
+TOKENIZER_DIR := tokenizer
+TOKENIZER_SRC :=\
+	tokenizer.c\
 	str_util.c\
 	sym.c\
 	token.c\
@@ -27,6 +30,7 @@ SRC :=\
 	interpreter.c\
 	redirection.c\
 	pipe.c\
+	$(TOKENIZER_SRC:%=$(TOKENIZER_DIR)/%)\
 	$(AST_SRC:%=$(AST_DIR)/%)\
 	$(PARSER_SRC:%=$(PARSER_DIR)/%)\
 
@@ -44,7 +48,7 @@ FT_LD := -L ./third-party/libft -lft
 CC := cc
 INCLUDE := -I $(FT_DIR) -I $(INCDIR)
 CFLAGS := -Wall -Werror -Wextra $(INCLUDE)
-LDFLAGS := -O3 -L $(HOME)/.brew/Cellar/readline/8.2.1/lib -lreadline -lhistory $(FT_LD)
+LDFLAGS := -L $(HOME)/.brew/Cellar/readline/8.2.1/lib -lreadline -lhistory $(FT_LD)
 
 # Rules
 
@@ -53,8 +57,8 @@ all: $(NAME)
 run: all
 	./$(NAME)
 
-debug: CFLAGS+= -g -fsanitize=address
-debug: LDFLAGS+= -fsanitize=address
+debug: CFLAGS+= -g -fsanitize=address,undefined
+debug: LDFLAGS+= -fsanitize=address,undefined
 debug: $(NAME)
 
 $(NAME): $(FT_AR) $(OBJ)

@@ -6,11 +6,11 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 14:37:39 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 13:11:31 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/04 19:22:50 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lexer.h"
+#include "tokenizer.h"
 
 #include <libft.h>
 

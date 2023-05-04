@@ -6,80 +6,86 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:00:33 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/02 13:20:43 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/04 19:32:54 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 
-static e_err	parse_argument(t_lexer *input, t_buf *argv_out)
+static e_err	parse_argument(t_token **iterator, t_buf *argv_out)
 {
 	const char	*argument;
 
-	argument = token_to_str(&input->token);
+	argument = token_to_str(*iterator);
+	*iterator += 1;
 	if (!buf_pushback(argv_out, &argument, 1))
 		return (MS_FAIL);
 	return (MS_SUCCESS);
 }
 
-static e_err	parse_redirection(t_lexer *input, t_buf *redir_out)
+static e_err	parse_redirection(t_token **iterator, t_buf *redir_out)
 {
 	t_redir	redirection;
 
-	if (lexer_next_is(input, TOK_GREAT | TOK_DGREAT))
+	if (token_is(*iterator, TOK_GREAT | TOK_DGREAT))
 		redirection.file_descriptor = STDOUT_FILENO;
-	else if (lexer_next_is(input, TOK_LESS | TOK_DLESS))
+	else if (token_is(*iterator, TOK_LESS | TOK_DLESS))
 		redirection.file_descriptor = STDIN_FILENO;
-	else if (lexer_next_is(input, TOK_IO_DIGIT))
+	else if (token_is(*iterator, TOK_IO_DIGIT))
 	{
-		redirection.file_descriptor = (int)(*input->token.begin - '0');
-		lexer_parse_token(input);
+		redirection.file_descriptor = (int)(*(*iterator)->begin - '0');
+		*iterator += 1;
 	}
 	else
-		return (unexpect(&input->token));
+		return (unexpect(*iterator));
 
-	if (lexer_next_is(input, TOK_GREAT))
+	if (token_is(*iterator, TOK_GREAT))
 		redirection.operation = REDIR_OUT_TRUNC;
-	else if (lexer_next_is(input, TOK_DGREAT))
+	else if (token_is(*iterator, TOK_DGREAT))
 		redirection.operation = REDIR_OUT_APPEND;
-	else if (lexer_next_is(input, TOK_LESS))
+	else if (token_is(*iterator, TOK_LESS))
 		redirection.operation = REDIR_IN_FILE;
-	else if (lexer_next_is(input, TOK_DLESS))
+	else if (token_is(*iterator, TOK_DLESS))
 		redirection.operation = REDIR_IN_HEREDOC;
 	else
-		return (unexpect(&input->token));
+		return (unexpect(*iterator));
 
-	lexer_parse_token(input);
+	*iterator += 1;
 
-	if (!lexer_next_is(input, TOK_WORD))
-		return (unexpect(&input->token));
-	redirection.argument = token_to_str(&input->token);
+	if (!token_is(*iterator, TOK_WORD))
+		return (unexpect(*iterator));
+	redirection.argument = token_to_str(*iterator);
 
 	if (!buf_pushback(redir_out, &redirection, 1))
 		return (MS_FAIL);
 	return (MS_SUCCESS);
 }
 
-e_err parse_parameters(t_lexer *input, t_buf *argv_out, t_buf *redir_out)
+e_err parse_parameters(t_token **iterator, t_buf *argv_out, t_buf *redir_out)
 {
-	e_err			status;
 	const e_token_type	redir_token =
 		TOK_DLESS | TOK_LESS | TOK_DGREAT | TOK_GREAT | TOK_IO_DIGIT;
 
-	if (!lexer_next_is(input, redir_token | TOK_WORD))
+	if (!token_is(*iterator, redir_token | TOK_WORD))
 	{
-		return (unexpect(&input->token));
+		return (unexpect(*iterator));
 	}
-	status = MS_SUCCESS;
-	while (status == MS_SUCCESS)
+	while (1)
 	{
-		if (lexer_next_is(input, TOK_WORD))
-			status = parse_argument(input, argv_out);
-		else if (lexer_next_is(input, redir_token))
-			status = parse_redirection(input, redir_out);
+		if (token_is(*iterator, TOK_WORD))
+		{
+			if (parse_argument(iterator, argv_out) == MS_FAIL)
+				break ;
+		}
+		else if (token_is(*iterator, redir_token))
+		{
+			if (parse_redirection(iterator, redir_out) == MS_FAIL)
+				break ;
+		}
 		else
+		{
 			return (MS_SUCCESS);
-		lexer_parse_token(input);
+		}
 	}
 	return (MS_FAIL);
 }

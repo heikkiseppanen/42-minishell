@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 08:26:08 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 14:21:42 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/04 16:08:05 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ t_token	*tokenize_string(const char *string);
 
 t_token	token_new(e_token_type type, const char *begin, size_t size);
 int		token_is(const t_token *token, e_token_type type_mask);
+char	*token_to_str(t_token *token);
 int		token_print(const t_token *token);
 int		put_token_fd(const t_token *token, int fd);
 
