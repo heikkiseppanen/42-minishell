@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 13:58:38 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 17:33:34 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/04 17:43:23 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	try_process(char **expanded_args)
 	char	*tmp;
 	int		i;
 
-	execve(expanded_args[0], expanded_args, g_state.environ_copy);
+	execve(expanded_args[0], expanded_args, htable_to_environ(g_state.envp));
 	paths = ft_split(ft_htable_get(g_state.envp, "PATH"), ':');
 	i = 0;
 	while (paths[i])

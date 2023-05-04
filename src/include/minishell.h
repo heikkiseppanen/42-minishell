@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 11:39:27 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/03 15:15:11 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/04 17:42:40 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 typedef struct s_shell_state
 {
 	t_htable	*envp;
-	char		**environ_copy;
 	int			pipeline_err;
 }	t_shell_state;
 

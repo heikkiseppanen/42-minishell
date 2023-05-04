@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/08 13:44:26 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/08 13:45:55 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ int	main(void)
 
 	g_state.envp = grab_environment_variables();
 	ft_htable_insert(g_state.envp, "SHLVL", ft_itoa(ft_atoi(ft_htable_get(g_state.envp, "SHLVL")) + 1));
-	g_state.environ_copy = htable_to_environ(g_state.envp);
 	rl_bind_key('\t', rl_complete);
 	using_history();
 	init_sighandler();
