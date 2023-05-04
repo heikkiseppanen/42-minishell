@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 08:26:08 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/02 07:13:19 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/04 14:21:42 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 typedef enum e_token_type
 {
 	TOK_UNKNOWN = 0,
-	TOK_EOF = 1,
+	TOK_NULL = 1,
 	TOK_WORD = 1 << 1,
 	TOK_PIPE = 1 << 2,
 	TOK_IO_DIGIT = 1 << 3,
@@ -30,6 +30,12 @@ typedef enum e_token_type
 	TOK_DGREAT = 1 << 7,
 }	e_token_type;
 
+typedef struct s_token_def
+{
+	char			character;
+	e_token_type	type;
+}	t_token_def;
+
 typedef struct s_token
 {
 	e_token_type	type;
@@ -37,22 +43,16 @@ typedef struct s_token
 	size_t			size;
 }	t_token;
 
-typedef struct s_lexer
-{
-	const char	*stream;
-	t_token		token;
-}	t_lexer;
+t_token	*tokenize_string(const char *string);
 
-t_lexer	lexer_new(const char *stream_begin);
-void	lexer_parse_token(t_lexer *lexer);
-e_bool	lexer_next_is(t_lexer *lexer, e_token_type type_mask);
+t_token	token_new(e_token_type type, const char *begin, size_t size);
+int		token_is(const t_token *token, e_token_type type_mask);
+int		token_print(const t_token *token);
+int		put_token_fd(const t_token *token, int fd);
 
-t_token	token_new(enum e_token_type type, const char *begin, size_t size);
-void	token_print(const t_token *token);
-char	*token_to_str(t_token *token);
+char	*str_skip_while(const char *restrict begin, int (while_is)(int));
+char	*str_skip_until(const char *restrict begin, int (until_is)(int));
 
-e_bool	char_is_meta(char c);
-e_bool	char_is_whitespace(char c);
-e_bool	char_is_digit(char c);
+int		char_is_meta(int c);
 
 #endif
