@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:00:33 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 19:32:54 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/04 20:24:24 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ static e_err	parse_redirection(t_token **iterator, t_buf *redir_out)
 	if (!token_is(*iterator, TOK_WORD))
 		return (unexpect(*iterator));
 	redirection.argument = token_to_str(*iterator);
+
+	*iterator += 1;
 
 	if (!buf_pushback(redir_out, &redirection, 1))
 		return (MS_FAIL);
