@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 16:59:51 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/04 17:20:31 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/04 17:31:27 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,5 +120,14 @@ int	put_env(char	**argv)
 			ft_printf("%s=%s\n", g_state.envp->memory[i]->key, g_state.envp->memory[i]->value);
 		i++;
 	}
+	return (0);
+}
+
+int	unset_var(char	**argv)
+{
+	extern t_shell_state	g_state;
+
+	(void)argv;
+	ft_htable_remove(g_state.envp, argv[1]);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 13:58:38 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 16:29:05 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/04 17:33:34 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ t_htable	*init_builtins()
 	ft_htable_insert(builtins, "pwd", put_cwd);
 	ft_htable_insert(builtins, "export", export_var);
 	ft_htable_insert(builtins, "env", put_env);
+	ft_htable_insert(builtins, "unset", unset_var);
 	return (builtins);
 }
 

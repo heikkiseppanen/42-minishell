@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 15:50:42 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/02 18:47:42 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/04 17:33:52 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,6 @@ int	echo(char **argv);
 int	put_cwd();
 int	export_var(char *str);
 int	put_env(char	**envp);
+int	unset_var(char	**argv);
 
 #endif
