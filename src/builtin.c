@@ -6,20 +6,48 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 16:59:51 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/03 15:17:58 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/04 17:20:31 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <sys/fcntl.h>
 #include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "libft.h"
 #include "minishell.h"
+extern t_shell_state	g_state; 
 
 int	change_directory(char	**argv)
 {
-	chdir(argv[1]);
+	struct stat				info;
+	int						fd;
+	char					*buf;
+
+	fd = open(argv[1], O_RDONLY); 
+	fstat(fd, &info);
+	buf = malloc(1024);
+	if (!buf)
+		return (1);
+	if (S_ISDIR(info.st_mode))
+	{
+		getcwd(buf, 1024);
+		buf = ft_strjoin(buf, "/");
+		buf = ft_strjoin(buf, argv[1]);
+		chdir(argv[1]);
+		getcwd(buf, 1024);
+		ft_htable_insert(g_state.envp, "PWD", buf);
+	}
+	else
+	{
+		printf("cd: not a directory: %s\n", argv[1]);
+		free(buf);
+		return (1);
+	}
+	printf("env changed: %s\n", (char *)ft_htable_get(g_state.envp, "PWD"));
 	return (0);
 }
 
@@ -58,6 +86,8 @@ int	put_cwd(char **argv)
 
 	(void)argv;
 	buf = malloc(1024);
+	if (!buf)
+		return (1);
 	getcwd(buf, 1024);
 	printf("%s\n", buf);
 	if (buf)
@@ -74,23 +104,20 @@ int	export_var(char **argv)
 	if (!var_val || !var_val[1])
 		return (1);
 	ft_htable_insert(g_state.envp, var_val[0], var_val[1]);
-	ft_printf("export %p\n", g_state.environ_copy);
-	g_state.environ_copy = htable_to_environ(g_state.envp);
-	ft_printf("export %p\n", g_state.environ_copy);
 	return (0);
 }
 
 int	put_env(char	**argv)
 {
-	int	i;
-	extern t_shell_state g_state;
+	size_t					i;
+	extern t_shell_state	g_state;
 
 	(void)argv;
 	i = 0;
-	ft_printf("env %p\n", g_state.environ_copy);
-	while (g_state.environ_copy[i])
+	while (i < g_state.envp->cap)
 	{
-		printf("%s\n", g_state.environ_copy[i]);
+		if (g_state.envp->memory[i])
+			ft_printf("%s=%s\n", g_state.envp->memory[i]->key, g_state.envp->memory[i]->value);
 		i++;
 	}
 	return (0);
