@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 12:04:10 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/01 14:59:09 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/08 13:45:06 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,14 @@ int		ft_lstsize(t_list *lst);
 // HASHTABLE
 
 long long	get_message_hash(const char *message);
-int		ft_htable_insert(t_htable *table, const char *key, void *value);
-int		ft_restructure_table(t_htable *table, const char *key, void *value);
-int		ft_probe_table(t_htable *table, const char *key, void *value);
+int			ft_htable_insert(t_htable *table, const char *key, void *value);
+int			ft_restructure_table(t_htable *table, const char *key, void *value);
+int			ft_probe_table(t_htable *table, const char *key, void *value);
 t_htable	*ft_htable_create(unsigned int init_size);
-int		ft_htable_insert(t_htable *table, const char *key, void *value);
+int			ft_htable_insert(t_htable *table, const char *key, void *value);
 void		*ft_htable_get(t_htable *table, const char *key);
-void		ft_print_htable(t_htable *table);
+void		ft_htable_print(t_htable *table);
+int			ft_htable_remove(t_htable *table, const char *key);
 
 // C TYPE
 

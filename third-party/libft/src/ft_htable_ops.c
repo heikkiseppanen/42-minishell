@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 13:54:37 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/03 10:47:38 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/04 17:29:59 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	*ft_htable_get(t_htable *table, const char *key)
 	return (NULL);
 }
 
-void	ft_print_htable(t_htable *table)
+void	ft_htable_print(t_htable *table)
 {
 	unsigned int	i;
 
@@ -79,4 +79,34 @@ void	ft_print_htable(t_htable *table)
 			table->memory[i]->key, (char *)table->memory[i]->value, i);
 		i++;
 	}
+}
+
+int	ft_htable_remove(t_htable *table, const char *key)
+{
+	unsigned long long	key_hash;
+	t_htelem			*orig_elem;
+
+	if (!table || !key)
+		return (-1);
+	key_hash = get_message_hash(key);
+	orig_elem = table->memory[key_hash % table->cap];
+	while (1)
+	{
+		if (table->memory[key_hash % table->cap])
+		{
+			if (!ft_strncmp(key, table->memory[key_hash % table->cap]->key, \
+						ft_strlen(key)))
+			{
+				free((void *)table->memory[key_hash % table->cap]->key);
+				free(table->memory[key_hash % table->cap]->value);
+				free(table->memory[key_hash % table->cap]);
+				table->memory[key_hash % table->cap] = NULL;
+				return (0);
+			}
+		}
+		key_hash++;
+		if (table->memory[key_hash % table->cap] == orig_elem)
+			return (-1);
+	}
+	return (-1);
 }
