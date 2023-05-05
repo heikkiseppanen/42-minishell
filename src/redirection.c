@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 12:10:16 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/02 13:01:56 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/04 20:07:01 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
-
-t_redir	redir_new(e_redir_op type, int src, const char *argument)
-{
-	return ((t_redir){type, src, argument});
-}
 
 void	redir_del(t_redir *instances, int size)
 {
@@ -57,8 +52,8 @@ e_err	redir_execute(const t_redir *instance)
 			perror(instance->argument);
 			return (MS_FAIL);
 		}
-		dup2(file, instance->file_descriptor);
-		close(file);
+		if (dup2(file, instance->file_descriptor) == -1 || close(file) == -1)
+			perror("redir error");
 		return (MS_SUCCESS);
 	}
 	else if (instance->operation == REDIR_OUT_TRUNC)
@@ -72,8 +67,8 @@ e_err	redir_execute(const t_redir *instance)
 			perror(instance->argument);
 			return (MS_FAIL);
 		}
-		dup2(file, instance->file_descriptor);
-		close(file);
+		if (dup2(file, instance->file_descriptor) == -1 || close(file) == -1)
+			perror("redir error");
 		return (MS_SUCCESS);
 	}
 	else if (instance->operation == REDIR_IN_FILE)
