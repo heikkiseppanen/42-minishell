@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:49:46 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 19:44:50 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/05 15:52:25 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_ast_node *parse_pipeline(t_token **iterator)
 	t_ast_branch	node_data;
 
 	node_data.left = parse_command(iterator);
-	if (!token_is(*iterator, TOK_PIPE))
+	if (!node_data.left || !token_is(*iterator, TOK_PIPE))
 	{
 		return (node_data.left);
 	}
