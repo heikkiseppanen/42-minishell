@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 19:41:43 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/05 10:59:13 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ e_err	handle_input(const char *input)
 	free(tokenized_input);
 	if (!syntax_tree)
 		return (MS_FAIL);
-	ast_print(syntax_tree, 0);
 	status = interpret_ast(syntax_tree);
 	ast_node_del(syntax_tree);
 	return (status);
