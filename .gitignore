@@ -54,3 +54,9 @@ dkms.conf
 
 # MacOS
 **/.DS_Store
+
+# Lsp dependencies
+.ccls-cache/
+compile_commands.json
+
+

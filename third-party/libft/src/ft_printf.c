@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/05 09:01:07 by hseppane          #+#    #+#             */
-/*   Updated: 2022/12/09 10:50:49 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/01 15:17:07 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,52 +14,70 @@
 
 #include <stdarg.h>
 
-static int	print_arg(va_list *args, char tok)
+static int	fprint_arg(int fd, va_list *args, char tok)
 {
 	if (tok == 'c')
-		return (ft_write_char((char)va_arg(*args, int)));
+		return (ft_putchar_fd((char)va_arg(*args, int), fd));
 	else if (tok == 's')
-		return (ft_write_str(va_arg(*args, const char *)));
+		return (ft_putstr_fd(va_arg(*args, const char *), fd));
 	else if (tok == 'p')
-		return (ft_putptr(va_arg(*args, void *)));
+		return (ft_putptr_fd(va_arg(*args, void *), fd));
 	else if (tok == 'd')
-		return (ft_putdec_i64(va_arg(*args, int)));
+		return (ft_putdec_i64_fd(va_arg(*args, int), fd));
 	else if (tok == 'i')
-		return (ft_putdec_i64(va_arg(*args, int)));
+		return (ft_putdec_i64_fd(va_arg(*args, int), fd));
 	else if (tok == 'u')
-		return (ft_putdec_u64(va_arg(*args, unsigned int)));
+		return (ft_putdec_u64_fd(va_arg(*args, unsigned int), fd));
 	else if (tok == 'x')
-		return (ft_puthex_lower_u64(va_arg(*args, unsigned int)));
+		return (ft_puthex_lower_u64_fd(va_arg(*args, unsigned int), fd));
 	else if (tok == 'X')
-		return (ft_puthex_upper_u64(va_arg(*args, unsigned int)));
+		return (ft_puthex_upper_u64_fd(va_arg(*args, unsigned int), fd));
 	else if (tok == '%')
-		return (ft_write_char('%'));
+		return (ft_putchar_fd('%', fd));
 	return (0);
+}
+
+static int ft_fprintf_va_list(int fd, const char *format, va_list *args)
+{
+	int	total_write;
+	int	token_length;
+
+	total_write = 0;
+	while (*format)
+	{
+		if (*format != '%')
+		{
+			token_length = ft_toklen(format, '%');
+			total_write += write(fd, format, token_length);
+			format += token_length;
+		}
+		else
+		{
+			total_write += fprint_arg(fd, args, *(++format));
+			++format;
+		}
+	}
+	return (total_write);
 }
 
 int	ft_printf(const char *str, ...)
 {
-	const char	*it = str;
 	va_list		arg_list;
-	size_t		toklen;
 	int			total_write;
 
 	va_start(arg_list, str);
-	total_write = 0;
-	while (*it)
-	{
-		if (*it != '%')
-		{
-			toklen = ft_toklen(it, '%');
-			total_write += write(STDOUT_FD, it, toklen);
-			it += toklen;
-		}
-		else
-		{
-			total_write += print_arg(&arg_list, *++it);
-			it++;
-		}
-	}
+	total_write = ft_fprintf_va_list(STDOUT_FILENO, str, &arg_list);
+	va_end(arg_list);
+	return (total_write);
+}
+
+int	ft_fprintf(int fd, const char *str, ...)
+{
+	va_list		arg_list;
+	int			total_write;
+
+	va_start(arg_list, str);
+	total_write = ft_fprintf_va_list(fd, str, &arg_list);
 	va_end(arg_list);
 	return (total_write);
 }

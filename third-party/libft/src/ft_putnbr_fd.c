@@ -6,20 +6,22 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 14:09:07 by hseppane          #+#    #+#             */
-/*   Updated: 2022/11/02 21:36:34 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/01 15:09:20 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putnbr_fd(int n, int fd)
+int	ft_putnbr_fd(int n, int fd)
 {
 	char	buf[12];
 	char	*it;
 	int		sign;
+	int		total_write;
 
 	it = buf;
 	sign = (n < 0);
+	total_write = 0;
 	if (n == 0)
 		*it++ = '0';
 	if (sign)
@@ -35,5 +37,6 @@ void	ft_putnbr_fd(int n, int fd)
 	if (sign)
 		*it++ = '-';
 	while (it-- != buf)
-		ft_putchar_fd(*it, fd);
+		total_write += ft_putchar_fd(*it, fd);
+	return (total_write);
 }

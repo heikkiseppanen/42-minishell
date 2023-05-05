@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_write_char.c                                    :+:      :+:    :+:   */
+/*   sym.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/26 10:05:22 by hseppane          #+#    #+#             */
-/*   Updated: 2022/12/12 10:49:46 by hseppane         ###   ########.fr       */
+/*   Created: 2023/03/23 14:37:39 by hseppane          #+#    #+#             */
+/*   Updated: 2023/05/04 19:22:50 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "tokenizer.h"
 
-#include <unistd.h>
+#include <libft.h>
 
-int	ft_write_char_fd(int fd, char c)
+int	char_is_meta(int c)
 {
-	return (write(fd, &c, 1));
-}
-
-int	ft_write_char(char c)
-{
-	return (ft_write_char_fd(STDOUT_FD, c));
+	return (c == '\0' || ft_isspace(c) || c == '|' || c == '<' || c == '>');
 }

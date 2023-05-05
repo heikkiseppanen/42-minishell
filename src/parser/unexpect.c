@@ -1,30 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printstr.c                                      :+:      :+:    :+:   */
+/*   unexpect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/26 09:14:49 by hseppane          #+#    #+#             */
-/*   Updated: 2022/12/12 10:48:55 by hseppane         ###   ########.fr       */
+/*   Created: 2023/05/02 09:54:20 by hseppane          #+#    #+#             */
+/*   Updated: 2023/05/04 19:20:24 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ast.h"
 
-#include <unistd.h>
-
-int	ft_write_str_fd(int fd, const char *str)
+e_err	unexpect(const t_token *token)
 {
-	size_t	len;
-
-	if (!str)
-		return (ft_write_str_fd(fd, "(null)"));
-	len = ft_strlen(str);
-	return (write(fd, str, len));
-}
-
-int	ft_write_str(const char *str)
-{
-	return (ft_write_str_fd(STDOUT_FD, str));
+	ft_fprintf(STDERR_FILENO, "minishell: syntax error near unexpected token ");
+	ft_putchar_fd('`', STDERR_FILENO);
+	if (token->type == TOK_NULL)
+	{
+		ft_putstr_fd("newline", STDERR_FILENO);
+	}
+	else
+	{
+		write(STDERR_FILENO, token->begin, token->size);
+	}
+	ft_putstr_fd("\'\n", STDERR_FILENO);
+	return (MS_FAIL);
 }

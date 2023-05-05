@@ -62,8 +62,6 @@ ft_putbase.c \
 ft_puthex.c \
 ft_putdec.c \
 ft_putptr.c \
-ft_write_str.c \
-ft_write_char.c \
 ft_htable_ops.c \
 ft_htable_utils.c \
 
@@ -76,7 +74,7 @@ CFLAGS := -O3 -I./ -Wall -Werror -Wextra
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	ar rus $(NAME) $(OBJ)
+	ar rs $(NAME) $(OBJ)
 
 # Include dependency info
 -include $(DEP)

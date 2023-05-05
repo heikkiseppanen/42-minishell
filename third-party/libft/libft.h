@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 12:04:10 by hseppane          #+#    #+#             */
-/*   Updated: 2023/04/26 13:58:53 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/01 14:59:09 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,27 +124,28 @@ int		ft_memcmp(const void *s1, const void *s2, size_t n);
 
 char	*get_next_line(int fd);
 
+int		ft_fprintf(int fd, const char *str, ...);
 int		ft_printf(const char *str, ...);
 
-int		ft_put_u64_base_fd(int fd, unsigned long long nb, int base, char *set);
-int		ft_put_i64_base_fd(int fd, long long nb, int base, char *set);
+int		ft_put_u64_base_fd(unsigned long long nb, int base, char *set, int fd);
+int		ft_put_i64_base_fd(long long nb, int base, char *set, int fd);
 
-int		ft_puthex_upper_u64_fd(int fd, unsigned long long nb);
+int		ft_puthex_upper_u64_fd(unsigned long long nb, int fd);
 int		ft_puthex_upper_u64(unsigned long long nb);
-int		ft_puthex_lower_u64_fd(int fd, unsigned long long nb);
+int		ft_puthex_lower_u64_fd(unsigned long long nb, int fd);
 int		ft_puthex_lower_u64(unsigned long long nb);
 
+int		ft_putdec_u64_fd(unsigned long long nb, int fd);
 int		ft_putdec_u64(unsigned long long nb);
+int		ft_putdec_i64_fd(long long nb, int fd);
 int		ft_putdec_i64(long long nb);
 
+int		ft_putptr_fd(void *ptr, int fd);
 int		ft_putptr(void *ptr);
 
-void	ft_putchar_fd(char c, int fd);
-void	ft_putstr_fd(char *c, int fd);
-void	ft_putendl_fd(char *c, int fd);
-void	ft_putnbr_fd(int n, int fd);
-int		ft_write_str_fd(int fd, const char *str);
-int		ft_write_str(const char *str);
-int		ft_write_char(char c);
+int		ft_putchar_fd(char c, int fd);
+int		ft_putstr_fd(const char *c, int fd);
+int		ft_putendl_fd(const char *c, int fd);
+int		ft_putnbr_fd(int n, int fd);
 
 #endif
