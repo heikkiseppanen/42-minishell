@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 13:11:24 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/07 14:23:37 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/07 14:28:48 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,26 +76,28 @@ static t_token	parse_token(const char *begin)
 
 t_token	*tokenize_string(const char *string)
 {
-	t_buf	token_buffer;
-	t_token	token;
+	t_buf	tokens;
+	t_token	current;
 
-	if (!buf_init(&token_buffer, 1, sizeof(token)))
+	string = str_skip_while(string, ft_isspace);
+	if (!*string || !buf_init(&tokens, 1, sizeof(current)))
+	{
 		return (NULL);
+	}
 	while (1)
 	{
-		string = str_skip_while(string, ft_isspace);
-		token = parse_token(string);
-		if (token.type == TOK_UNKNOWN
-			|| !buf_pushback(&token_buffer, &token, 1))
+		current = parse_token(string);
+		if (current.type == TOK_UNKNOWN || !buf_pushback(&tokens, &current, 1))
 			break ;
-		if (token.type == TOK_NULL)
+		if (current.type == TOK_NULL)
 		{
-			if (!buf_resize(&token_buffer, token_buffer.size))
+			if (!buf_resize(&tokens, tokens.size))
 				break ;
-			return (token_buffer.data);
+			return (tokens.data);
 		}
-		string += token.size;
+		string += current.size;
+		string = str_skip_while(string, ft_isspace);
 	}
-	buf_del(&token_buffer);
+	buf_del(&tokens);
 	return (NULL);
 }
