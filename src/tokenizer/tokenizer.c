@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 13:11:24 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/07 14:28:48 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/07 14:34:30 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,11 @@ t_token	*tokenize_string(const char *string)
 	{
 		current = parse_token(string);
 		if (current.type == TOK_UNKNOWN || !buf_pushback(&tokens, &current, 1))
+		{
 			break ;
+		}
 		if (current.type == TOK_NULL)
 		{
-			if (!buf_resize(&tokens, tokens.size))
-				break ;
 			return (tokens.data);
 		}
 		string += current.size;
