@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 13:11:24 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 15:51:58 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/07 14:23:37 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,20 @@ static const t_token_def	*get_token_lookup_table(void)
 static t_token	parse_word_token(const char *begin)
 {
 	const char *it = begin;
+	const char *pair;
 
 	while (!char_is_meta(*it))
 	{
 		if (*it == '\'' || *it == '\"')
 		{
-			it = ft_strchr(it + 1, *it);
-			if (!it)
+			pair = ft_strchr(it + 1, *it);
+			if (!pair)
 			{
+				ft_fprintf(STDERR_FILENO,
+					"syntax error, '%c' missing a pair\n", *it);
 				return (token_new(TOK_UNKNOWN, NULL, 0));
 			}
+			it = pair;
 		}
 		++it;
 	}
