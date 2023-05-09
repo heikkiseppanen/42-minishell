@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 13:11:24 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 15:51:58 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/07 14:34:30 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,20 @@ static const t_token_def	*get_token_lookup_table(void)
 static t_token	parse_word_token(const char *begin)
 {
 	const char *it = begin;
+	const char *pair;
 
 	while (!char_is_meta(*it))
 	{
 		if (*it == '\'' || *it == '\"')
 		{
-			it = ft_strchr(it + 1, *it);
-			if (!it)
+			pair = ft_strchr(it + 1, *it);
+			if (!pair)
 			{
+				ft_fprintf(STDERR_FILENO,
+					"syntax error, '%c' missing a pair\n", *it);
 				return (token_new(TOK_UNKNOWN, NULL, 0));
 			}
+			it = pair;
 		}
 		++it;
 	}
@@ -72,26 +76,28 @@ static t_token	parse_token(const char *begin)
 
 t_token	*tokenize_string(const char *string)
 {
-	t_buf	token_buffer;
-	t_token	token;
+	t_buf	tokens;
+	t_token	current;
 
-	if (!buf_init(&token_buffer, 1, sizeof(token)))
+	string = str_skip_while(string, ft_isspace);
+	if (!*string || !buf_init(&tokens, 1, sizeof(current)))
+	{
 		return (NULL);
+	}
 	while (1)
 	{
-		string = str_skip_while(string, ft_isspace);
-		token = parse_token(string);
-		if (token.type == TOK_UNKNOWN
-			|| !buf_pushback(&token_buffer, &token, 1))
-			break ;
-		if (token.type == TOK_NULL)
+		current = parse_token(string);
+		if (current.type == TOK_UNKNOWN || !buf_pushback(&tokens, &current, 1))
 		{
-			if (!buf_resize(&token_buffer, token_buffer.size))
-				break ;
-			return (token_buffer.data);
+			break ;
 		}
-		string += token.size;
+		if (current.type == TOK_NULL)
+		{
+			return (tokens.data);
+		}
+		string += current.size;
+		string = str_skip_while(string, ft_isspace);
 	}
-	buf_del(&token_buffer);
+	buf_del(&tokens);
 	return (NULL);
 }
