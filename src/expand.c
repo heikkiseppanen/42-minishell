@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/09 10:01:34 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/10 02:50:37 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ char	*str_expand(const char *string)
 	openchar = 0;
 	buf = malloc(sizeof(t_buf));
 	buf_init(buf, 1024, 1);
+	if (!buf)
+		return (NULL);
 	while(*string)
 	{
 		if ((*string == '"' || *string == '\'') && open < 0)
@@ -45,17 +47,21 @@ char	*str_expand(const char *string)
 		}
 		else if ((*string == '$') && (openchar == '"' || open < 0))
 		{
+			string++;
 			i = 0;
-
 			while (string[i] && ft_isalnum(string[i]))
 				i++;
 			env = malloc(i + 1);
+			if (!env)
+				return (NULL);
 			i = 0;
-			string++;
 			if (*string == '?')
 			{
 				envres = ft_itoa(g_state.pipeline_err);
+				if (!envres)
+					return (NULL);
 				buf_pushback(buf, envres, ft_strlen(envres));
+				free(envres);
 				string++;
 				continue ;
 			}
@@ -84,6 +90,7 @@ char	*str_expand(const char *string)
 			if (!envres)
 				continue ;
 			buf_pushback(buf, envres, ft_strlen(envres));
+			free(envres);
 			if (!(*string))
 				break ;
 			continue ;
