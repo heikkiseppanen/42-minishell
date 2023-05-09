@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 13:58:38 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 17:43:23 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/09 09:45:41 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "expand.h"
 #include "builtins.h"
 #include "typedef.h"
+
 #include <unistd.h>
 #include <sys/wait.h>
 #include <stdio.h>
@@ -130,58 +131,6 @@ e_err	execute_command(t_ast_node *command)
 	}
 	waitpid(process, &exit_status, 0);
 	g_state.pipeline_err = WEXITSTATUS(exit_status);
-	return (MS_SUCCESS);
-}
-
-e_err	launch_pipeline(t_ast_node *pipeline, t_buf *pid_out)
-{
-	t_pipe	input;
-	t_pipe	output;
-	pid_t	process;
-
-	pipe_init(&output);
-	process = launch_command(ast_left(pipeline), NULL, &output);
-	buf_pushback(pid_out, &process, 1);
-	pipeline = ast_right(pipeline);
-	while (pipeline->type == AST_PIPE)
-	{
-		input = output;
-		pipe_init(&output);
-		process = launch_command(ast_left(pipeline), &input, &output);
-		buf_pushback(pid_out, &process, 1);
-		pipe_close(&input);
-		pipeline = ast_right(pipeline);
-	}
-	process = launch_command(pipeline, &output, NULL);
-	buf_pushback(pid_out, &process, 1);
-	pipe_close(&output);
-	return (MS_SUCCESS);
-}
-
-e_err	execute_pipeline(t_ast_node *pipeline_start)
-{
-	t_buf					processes;
-
-	if (!buf_init(&processes, 2, sizeof(pid_t))
-		|| launch_pipeline(pipeline_start, &processes) == MS_FAIL)
-	{
-		buf_del(&processes);
-		return (MS_FAIL);
-	}
-
-	pid_t *proc_it = processes.data;
-	pid_t *proc_end = proc_it + processes.size;
-
-	while (proc_it != proc_end)
-	{
-		int exit_status = 0;
-
-		waitpid(*proc_it, &exit_status, 0);
-		//printf("Process exited with code: %d\n", exit_status >> 8);
-		++proc_it;
-	}
-
-	buf_del(&processes);
 	return (MS_SUCCESS);
 }
 

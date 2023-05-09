@@ -24,12 +24,19 @@ PARSER_SRC :=\
 	parse_command.c\
 	parse_parameters.c\
 
+INTERPRETER_DIR := interpreter
+INTERPRETER_SRC :=\
+	interpreter.c\
+	pipeline.c\
+
 SRC :=\
 	main.c\
 	signal.c\
-	interpreter.c\
 	redirection.c\
 	pipe.c\
+	builtin.c\
+	expand.c\
+	$(INTERPRETER_SRC:%=$(INTERPRETER_DIR)/%)\
 	$(TOKENIZER_SRC:%=$(TOKENIZER_DIR)/%)\
 	$(AST_SRC:%=$(AST_DIR)/%)\
 	$(PARSER_SRC:%=$(PARSER_DIR)/%)\
@@ -77,6 +84,7 @@ clean:
 	/bin/rm -rf $(OBJDIR)
 
 fclean: clean
+	make fclean -C $(FT_DIR)
 	/bin/rm -f $(NAME)
 
 re: fclean all
