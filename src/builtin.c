@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 16:59:51 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/04 17:31:27 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/10 03:03:12 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,18 +95,6 @@ int	put_cwd(char **argv)
 	return (0);
 }
 
-int	export_var(char **argv)
-{
-	char					**var_val;
-	extern t_shell_state	g_state;
-
-	var_val = ft_split(argv[1], '=');
-	if (!var_val || !var_val[1])
-		return (1);
-	ft_htable_insert(g_state.envp, var_val[0], var_val[1]);
-	return (0);
-}
-
 int	put_env(char	**argv)
 {
 	size_t					i;
@@ -119,6 +107,29 @@ int	put_env(char	**argv)
 		if (g_state.envp->memory[i])
 			ft_printf("%s=%s\n", g_state.envp->memory[i]->key, g_state.envp->memory[i]->value);
 		i++;
+	}
+	return (0);
+}
+
+int	export_var(char **argv)
+{
+	char					**var_val;
+	extern t_shell_state	g_state;
+	int						cur_arg;
+
+	cur_arg = 1;
+	if (!argv[cur_arg])
+		put_env(argv);
+	while (argv[cur_arg])
+	{
+		var_val = ft_split(argv[1], '=');
+		if (!var_val || !var_val[0])
+			return (1);
+		if (!var_val[1])
+			ft_htable_insert(g_state.envp, var_val[0], "");
+		else
+			ft_htable_insert(g_state.envp, var_val[0], var_val[1]);
+		cur_arg++;
 	}
 	return (0);
 }
