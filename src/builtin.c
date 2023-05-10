@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 16:59:51 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/10 03:48:46 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/10 04:01:49 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,20 @@ int	change_directory(char	**argv)
 	{
 		getcwd(buf, 1024);
 		buf = ft_strjoin(buf, "/");
+		if (!buf)
+			return (1);
 		buf = ft_strjoin(buf, argv[1]);
+		if (!buf)
+			return (1);
 		chdir(argv[1]);
 		getcwd(buf, 1024);
 		ft_htable_insert(g_state.envp, "PWD", buf);
 	}
 	else
 	{
-		printf("cd: not a directory: %s\n", argv[1]);
 		free(buf);
 		return (1);
 	}
-	printf("env changed: %s\n", (char *)ft_htable_get(g_state.envp, "PWD"));
 	return (0);
 }
 
@@ -69,8 +71,12 @@ int	echo(char **argv)
 			continue ;
 		}
 		echo_str = ft_strjoin(echo_str, argv[i]);
+		if (!echo_str)
+			return (1);
 		if (argv[i + 1])
 			echo_str = ft_strjoin(echo_str, " " );
+		if (!echo_str)
+			return (1);
 		i++;
 	}
 	if (nline_flag)
@@ -114,6 +120,7 @@ int	put_env(char	**argv)
 int	export_var(char **argv)
 {
 	char					**var_val;
+	char					*value;
 	extern t_shell_state	g_state;
 	int						cur_arg;
 
@@ -126,9 +133,12 @@ int	export_var(char **argv)
 		if (!var_val || !var_val[0])
 			return (1);
 		if (!var_val[1])
-			ft_htable_insert(g_state.envp, var_val[0], ft_strdup(""));
+			value = ft_strdup("");
 		else
-			ft_htable_insert(g_state.envp, var_val[0], var_val[1]);
+			value = var_val[1];
+		if (!value)
+			return (1);
+		ft_htable_insert(g_state.envp, var_val[0], value);
 		cur_arg++;
 	}
 	return (0);
