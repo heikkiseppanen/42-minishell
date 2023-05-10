@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/08 13:45:55 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/10 04:14:57 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "minishell.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <termios.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -112,8 +113,10 @@ void	print_environ(char **envp)
 
 int	main(void)
 {
-	char	*input;
+	char			*input;
+	struct termios  term;
 
+	tcgetattr(STDIN_FILENO, &term);
 	g_state.envp = grab_environment_variables();
 	ft_htable_insert(g_state.envp, "SHLVL", ft_itoa(ft_atoi(ft_htable_get(g_state.envp, "SHLVL")) + 1));
 	rl_bind_key('\t', rl_complete);
@@ -121,12 +124,17 @@ int	main(void)
 	init_sighandler();
 	while (1)
 	{
-		input = readline("> ");
+		term.c_lflag &= ~ECHOCTL;
+        tcsetattr(0, TCSANOW, &term);
+        input = readline("> ");
+        term.c_lflag |= ECHOCTL;
+        tcsetattr(0, TCSANOW, &term);
 		if (!input)
 			break ;
 		handle_input(input);
 		add_history(input);
 		free(input);
 	}
+	write(1, "exit", 4);
 	return (0);
 }
