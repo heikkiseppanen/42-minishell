@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 16:59:51 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/10 03:03:12 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/10 03:48:46 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,11 +122,11 @@ int	export_var(char **argv)
 		put_env(argv);
 	while (argv[cur_arg])
 	{
-		var_val = ft_split(argv[1], '=');
+		var_val = ft_split(argv[cur_arg], '=');
 		if (!var_val || !var_val[0])
 			return (1);
 		if (!var_val[1])
-			ft_htable_insert(g_state.envp, var_val[0], "");
+			ft_htable_insert(g_state.envp, var_val[0], ft_strdup(""));
 		else
 			ft_htable_insert(g_state.envp, var_val[0], var_val[1]);
 		cur_arg++;

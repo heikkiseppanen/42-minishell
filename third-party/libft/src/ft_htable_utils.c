@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 07:37:09 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/04/26 14:00:34 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/10 03:50:53 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ int	ft_probe_table(t_htable *table, const char *key, void *value)
 		else if (!ft_strncmp(key, table->memory[index]->key, \
 					ft_strlen(key)))
 		{
-			free(table->memory[index]->value);
 			table->memory[index]->value = value;
 			break ;
 		}
