@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:29:23 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/02 09:29:08 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/10 04:23:11 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,9 @@
 
 void	return_prompt(void)
 {
-	write(1, "\n", 1);
-	rl_replace_line("", 1);
+	ioctl(STDIN_FILENO, TIOCSTI, "\n");
+	rl_replace_line("", 0);
 	rl_on_new_line();
-	rl_redisplay();
 }
 
 void	sig_handler(int signum)
