@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 07:37:09 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/11 20:09:47 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/11 20:58:28 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ long long	get_message_hash(const char *message)
 	return (hash);
 }
 
-int	ft_restructure_table(t_htable *table, const char *key, void *value)
+int	ft_restructure_table(t_htable *table, char *key, void *value)
 {
 	t_htable	*tmp;
 	unsigned int			i;
@@ -52,7 +52,7 @@ int	ft_restructure_table(t_htable *table, const char *key, void *value)
 	return (1);
 }
 
-int	ft_probe_table(t_htable *table, const char *key, void *value)
+int	ft_probe_table(t_htable *table, char *key, void *value)
 {
 	unsigned long long	key_hash;
 	unsigned long long     index;
