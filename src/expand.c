@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/10 03:03:27 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/11 12:17:41 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ char	*str_expand(const char *string)
 				string++;
 			}
 			else if (ft_isalpha(*string))
-				printf(" ");
+				printf("");
 			else
 			{
 				buf_pushback(buf, (void *)&(string[-1]), 1);
@@ -90,7 +90,6 @@ char	*str_expand(const char *string)
 			if (!envres)
 				continue ;
 			buf_pushback(buf, envres, ft_strlen(envres));
-			free(envres);
 			if (!(*string))
 				break ;
 			continue ;
