@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/11 13:15:47 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/11 18:57:23 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,17 @@
 
 extern char 	**environ;
 t_shell_state 	g_state;
+
+static void	increment_shlvl()
+{
+	char			*tmp;
+	int				shlvl;
+
+	tmp = ft_htable_get(g_state.envp, "SHLVL");
+	shlvl = ft_atoi(tmp);
+	ft_htable_remove(g_state.envp, "SHLVL");
+	ft_htable_insert(g_state.envp, "SHLVL", ft_itoa(shlvl + 1));
+}
 
 t_htable	*grab_environment_variables()
 {
@@ -118,7 +129,7 @@ int	main(void)
 
 	tcgetattr(STDIN_FILENO, &term);
 	g_state.envp = grab_environment_variables();
-	ft_htable_insert(g_state.envp, "SHLVL", ft_itoa(ft_atoi(ft_htable_get(g_state.envp, "SHLVL")) + 1));
+	increment_shlvl();
 	rl_bind_key('\t', rl_complete);
 	using_history();
 	init_sighandler();
