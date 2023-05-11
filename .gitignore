@@ -58,5 +58,4 @@ dkms.conf
 # Lsp dependencies
 .ccls-cache/
 compile_commands.json
-
-
+.cache/
