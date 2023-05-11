@@ -6,12 +6,13 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/11 12:21:02 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/11 13:08:38 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "../third-party/libft/libft.h"
+#include "include/ft/buf.h"
 #include "minishell.h"
 
 extern t_shell_state g_state;
@@ -28,8 +29,7 @@ char	*str_expand(const char *string)
 	open = -1;
 	openchar = 0;
 	buf = malloc(sizeof(t_buf));
-	buf_init(buf, 1024, 1);
-	if (!buf)
+	if (!buf || !(buf_init(buf, 1024, 1)))
 		return (NULL);
 	while(*string)
 	{
@@ -64,9 +64,15 @@ char	*str_expand(const char *string)
 				if (!envres)
 				{
 					buf_del(buf);
+					free(env);
 					return (NULL);
 				}
-				buf_pushback(buf, envres, ft_strlen(envres));
+				if (!buf_pushback(buf, envres, ft_strlen(envres)))
+				{
+					buf_del(buf);
+					free(env);
+					return (NULL);
+				}
 				free(envres);
 				string++;
 				continue ;
@@ -77,12 +83,18 @@ char	*str_expand(const char *string)
 				i++;
 				string++;
 			}
-			else if (ft_isalpha(*string))
-				printf("");
 			else
 			{
-				buf_pushback(buf, (void *)&(string[-1]), 1);
-				continue ;
+				if (!ft_isalpha(*string))
+				{
+					if (!buf_pushback(buf, (void *)&(string[-1]), 1))
+					{
+						buf_del(buf);
+						free(env);
+						return (NULL);
+					}
+					continue ;
+				}
 			}
 			while (*string && ft_isalnum(*string))
 			{
@@ -95,13 +107,20 @@ char	*str_expand(const char *string)
 			free(env);
 			if (!envres)
 				continue ;
-			buf_pushback(buf, envres, ft_strlen(envres));
+			if (!buf_pushback(buf, envres, ft_strlen(envres)))
+			{
+				buf_del(buf);
+				return (NULL);
+			}
 			if (!(*string))
 				break ;
 			continue ;
 		}
 		else
-			buf_pushback(buf, (void *)string, 1);
+		{
+			if (!buf_pushback(buf, (void *)string, 1))
+				return (NULL);
+		}
 		string++;
 	}
 	return ((char *)buf->data);
