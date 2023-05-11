@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/11 19:01:04 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/11 20:08:08 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,18 @@
 extern char 	**environ;
 t_shell_state 	g_state;
 
-static void	increment_shlvl()
+static int	increment_shlvl()
 {
 	char			*tmp;
 	int				shlvl;
 
 	tmp = ft_htable_get(g_state.envp, "SHLVL");
 	shlvl = ft_atoi(tmp);
-	ft_htable_remove(g_state.envp, "SHLVL");
-	ft_htable_insert(g_state.envp, "SHLVL", ft_itoa(shlvl + 1));
-	free(tmp);
+	if (ft_htable_remove(g_state.envp, "SHLVL") == -1)
+		return (0);
+	if (!ft_htable_insert(g_state.envp, "SHLVL", ft_itoa(shlvl + 1)))
+		return (0);
+	return (1);
 }
 
 t_htable	*grab_environment_variables()
@@ -111,42 +113,41 @@ e_err	handle_input(const char *input)
 	return (status);
 }
 
-void	print_environ(char **envp)
-{
-	int	i;
-
-	i = 0;
-	while (envp[i])
-	{
-		printf("%s\n", envp[i]);
-		i++;
-	}
-}
-
-int	main(void)
+void	shell_repl(struct termios *term)
 {
 	char			*input;
-	struct termios  term;
 
-	tcgetattr(STDIN_FILENO, &term);
-	g_state.envp = grab_environment_variables();
-	increment_shlvl();
-	rl_bind_key('\t', rl_complete);
-	using_history();
-	init_sighandler();
+	tcgetattr(STDIN_FILENO, term);
 	while (1)
 	{
-		term.c_lflag &= ~ECHOCTL;
-        tcsetattr(0, TCSANOW, &term);
+		term->c_lflag &= ~ECHOCTL;
+        tcsetattr(0, TCSANOW, term);
         input = readline("> ");
-        term.c_lflag |= ECHOCTL;
-        tcsetattr(0, TCSANOW, &term);
+        term->c_lflag |= ECHOCTL;
+        tcsetattr(0, TCSANOW, term);
 		if (!input)
 			break ;
 		handle_input(input);
 		add_history(input);
 		free(input);
 	}
+}
+
+int	main(void)
+{
+	struct termios  term;
+
+	tcgetattr(STDIN_FILENO, &term);
+	g_state.envp = grab_environment_variables();
+	if (!increment_shlvl())
+	{
+		perror("Failed to increment shell level");
+		exit (1);
+	}
+	rl_bind_key('\t', rl_complete);
+	using_history();
+	init_sighandler();
+	shell_repl(&term);
 	write(1, "exit\n", 5);
 	return (0);
 }
