@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/11 12:17:41 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/11 12:21:02 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,19 @@ char	*str_expand(const char *string)
 				i++;
 			env = malloc(i + 1);
 			if (!env)
+			{
+				buf_del(buf);
 				return (NULL);
+			}
 			i = 0;
 			if (*string == '?')
 			{
 				envres = ft_itoa(g_state.pipeline_err);
 				if (!envres)
+				{
+					buf_del(buf);
 					return (NULL);
+				}
 				buf_pushback(buf, envres, ft_strlen(envres));
 				free(envres);
 				string++;
