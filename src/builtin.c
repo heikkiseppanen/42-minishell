@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 16:59:51 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/11 21:42:23 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/11 21:47:15 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	put_cwd(char **argv)
 	if (!buf)
 		return (1);
 	getcwd(buf, 1024);
-	printf("%s\n", buf);
+	ft_printf("%s\n", buf);
 	if (buf)
 		free(buf);
 	return (0);
