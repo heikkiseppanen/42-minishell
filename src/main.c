@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/10 04:14:57 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/11 13:15:47 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,6 @@ int	main(void)
 		add_history(input);
 		free(input);
 	}
-	write(1, "exit", 4);
+	write(1, "exit\n", 5);
 	return (0);
 }
