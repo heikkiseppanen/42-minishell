@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/11 15:41:51 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/11 20:18:11 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ char	*str_expand(const char *string)
 {
 	t_exp_state	state;
 	int			rval;
+	char		*expanded;
 
 	state.open = -1;
 	state.openchar = 0;
@@ -143,7 +144,9 @@ char	*str_expand(const char *string)
 		}
 		string++;
 	}
-	return ((char *)state.buf->data);
+	expanded = ft_strdup((char *)state.buf->data);
+	buf_del(state.buf);
+	return (expanded);
 }
 
 char	**expand_arglist(char **argv)
