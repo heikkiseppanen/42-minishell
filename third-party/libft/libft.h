@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 12:04:10 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/08 13:45:06 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/11 20:53:15 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ int		ft_lstsize(t_list *lst);
 
 long long	get_message_hash(const char *message);
 int			ft_htable_insert(t_htable *table, const char *key, void *value);
-int			ft_restructure_table(t_htable *table, const char *key, void *value);
-int			ft_probe_table(t_htable *table, const char *key, void *value);
+int			ft_restructure_table(t_htable *table, char *key, void *value);
+int			ft_probe_table(t_htable *table, char *key, void *value);
 t_htable	*ft_htable_create(unsigned int init_size);
 int			ft_htable_insert(t_htable *table, const char *key, void *value);
 void		*ft_htable_get(t_htable *table, const char *key);
