@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/11 13:08:38 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/11 15:41:51 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,113 +17,133 @@
 
 extern t_shell_state g_state;
 
-char	*str_expand(const char *string)
+typedef struct s_exp_state
 {
-	int		i;
 	char	openchar;
-	char	*env;
-	char	*envres;
 	t_buf	*buf;
 	int		open;
+}	t_exp_state;
 
-	open = -1;
-	openchar = 0;
-	buf = malloc(sizeof(t_buf));
-	if (!buf || !(buf_init(buf, 1024, 1)))
+int	handle_exp(t_exp_state *s, char **string)
+{
+	char	*env;
+	char	*envres;
+	int		i;
+
+	i = 0;
+	while ((*string)[i] && ft_isalnum((*string)[i]))
+		i++;
+	env = malloc(i + 1);
+	if (!env)
+	{
+		buf_del(s->buf);
+		return (0);
+	}
+	i = 0;
+	if (**string == '?')
+	{
+		envres = ft_itoa(g_state.pipeline_err);
+		if (!envres)
+		{
+			buf_del(s->buf);
+			free(env);
+			return (0);
+		}
+		if (!buf_pushback(s->buf, envres, ft_strlen(envres)))
+		{
+			buf_del(s->buf);
+			free(env);
+			free(envres);
+			return (0);
+		}
+		free(envres);
+		(*string)++;
+		return (1);
+	}
+	else if (**string == '_')
+	{
+		env[i] = '_';
+		i++;
+		(*string)++;
+	}
+	else
+	{
+		if (!ft_isalpha(**string))
+		{
+			if (!buf_pushback(s->buf, (void *)(string[-1]), 1))
+			{
+				buf_del(s->buf);
+				free(env);
+				return (0);
+			}
+			return (1);
+		}
+	}
+	while (**string && ft_isalnum(**string))
+	{
+		env[i] = **string;
+		(*string)++;
+		i++;
+	}
+	env[i] = '\0';
+	envres = ft_htable_get(g_state.envp, env);
+	free(env);
+	if (!envres)
+		return (1);
+	if (!buf_pushback(s->buf, envres, ft_strlen(envres)))
+	{
+		buf_del(s->buf);
+		return (0);
+	}
+	if (!(*string))
+		return (2);
+	return (1);
+}
+
+
+
+char	*str_expand(const char *string)
+{
+	t_exp_state	state;
+	int			rval;
+
+	state.open = -1;
+	state.openchar = 0;
+	state.buf = malloc(sizeof(t_buf));
+	if (!state.buf || !(buf_init(state.buf, 1024, 1)))
 		return (NULL);
 	while(*string)
 	{
-		if ((*string == '"' || *string == '\'') && open < 0)
+		if ((*string == '"' || *string == '\'') && state.open < 0)
 		{
-			openchar = '"';
+			state.openchar = '"';
 			if (*string == '\'')
-				openchar = '\'';
-			open = 1;
+				state.openchar = '\'';
+			state.open = 1;
 		}
-		else if ((*string == openchar) && open > 0)
+		else if ((*string == state.openchar) && state.open > 0)
 		{
-			openchar = 0;
-			open = -1;
+			state.openchar = 0;
+			state.open = -1;
 		}
-		else if ((*string == '$') && (openchar == '"' || open < 0))
+		else if ((*string == '$') && (state.openchar == '"' || state.open < 0))
 		{
 			string++;
-			i = 0;
-			while (string[i] && ft_isalnum(string[i]))
-				i++;
-			env = malloc(i + 1);
-			if (!env)
-			{
-				buf_del(buf);
+			rval = handle_exp(&state, (char **)&string);
+			if (!rval)
 				return (NULL);
-			}
-			i = 0;
-			if (*string == '?')
-			{
-				envres = ft_itoa(g_state.pipeline_err);
-				if (!envres)
-				{
-					buf_del(buf);
-					free(env);
-					return (NULL);
-				}
-				if (!buf_pushback(buf, envres, ft_strlen(envres)))
-				{
-					buf_del(buf);
-					free(env);
-					return (NULL);
-				}
-				free(envres);
-				string++;
+			if (rval == 1)
 				continue ;
-			}
-			else if (*string == '_')
-			{
-				env[i] = '_';
-				i++;
-				string++;
-			}
-			else
-			{
-				if (!ft_isalpha(*string))
-				{
-					if (!buf_pushback(buf, (void *)&(string[-1]), 1))
-					{
-						buf_del(buf);
-						free(env);
-						return (NULL);
-					}
-					continue ;
-				}
-			}
-			while (*string && ft_isalnum(*string))
-			{
-				env[i] = *string;
-				string++;
-				i++;
-			}
-			env[i] = '\0';
-			envres = ft_htable_get(g_state.envp, env);
-			free(env);
-			if (!envres)
-				continue ;
-			if (!buf_pushback(buf, envres, ft_strlen(envres)))
-			{
-				buf_del(buf);
-				return (NULL);
-			}
-			if (!(*string))
-				break ;
-			continue ;
+			break ;
 		}
 		else
 		{
-			if (!buf_pushback(buf, (void *)string, 1))
+			if (!buf_pushback(state.buf, (void *)string, 1))
 				return (NULL);
 		}
 		string++;
 	}
-	return ((char *)buf->data);
+	return ((char *)state.buf->data);
 }
 
 char	**expand_arglist(char **argv)
