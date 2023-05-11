@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 11:23:45 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 18:58:30 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/10 14:36:24 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "typedef.h"
 # include "tokenizer.h"
-# include "redirection.h"
+# include "redir.h"
 
 # include <libft.h>
 

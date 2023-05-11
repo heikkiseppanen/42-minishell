@@ -6,11 +6,11 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 12:10:16 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 20:07:01 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/10 14:37:00 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "redirection.h"
+#include "redir.h"
 
 #include <stdlib.h>
 #include <fcntl.h>
@@ -119,3 +119,4 @@ e_err	redir_execute(const t_redir *instance)
 	}
 	return (MS_SUCCESS);
 }
+

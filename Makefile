@@ -28,18 +28,25 @@ INTERPRETER_DIR := interpreter
 INTERPRETER_SRC :=\
 	interpreter.c\
 	pipeline.c\
+	redirection.c\
+	command.c\
+	process.c\
+
+IO_DIR := io
+IO_SRC :=\
+	pipe.c\
+	redir.c\
 
 SRC :=\
 	main.c\
 	signal.c\
-	redirection.c\
-	pipe.c\
 	builtin.c\
 	expand.c\
-	$(INTERPRETER_SRC:%=$(INTERPRETER_DIR)/%)\
-	$(TOKENIZER_SRC:%=$(TOKENIZER_DIR)/%)\
 	$(AST_SRC:%=$(AST_DIR)/%)\
+	$(TOKENIZER_SRC:%=$(TOKENIZER_DIR)/%)\
 	$(PARSER_SRC:%=$(PARSER_DIR)/%)\
+	$(INTERPRETER_SRC:%=$(INTERPRETER_DIR)/%)\
+	$(IO_SRC:%=$(IO_DIR)/%)\
 
 OBJ := $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 DEP := $(OBJ:%.o=%.d)
