@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 07:37:09 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/10 03:50:53 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/11 20:09:47 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,5 +77,5 @@ int	ft_probe_table(t_htable *table, const char *key, void *value)
 		}
 		key_hash++;
 	}
-	return (0);
+	return (1);
 }
