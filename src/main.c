@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/11 18:57:23 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/11 19:01:04 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static void	increment_shlvl()
 	shlvl = ft_atoi(tmp);
 	ft_htable_remove(g_state.envp, "SHLVL");
 	ft_htable_insert(g_state.envp, "SHLVL", ft_itoa(shlvl + 1));
+	free(tmp);
 }
 
 t_htable	*grab_environment_variables()
