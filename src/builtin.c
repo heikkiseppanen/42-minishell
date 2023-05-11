@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 16:59:51 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/10 04:01:49 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/11 21:42:23 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,16 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include "include/ft/buf.h"
 #include "libft.h"
 #include "minishell.h"
 extern t_shell_state	g_state; 
 
 int	change_directory(char	**argv)
 {
-	struct stat				info;
-	int						fd;
-	char					*buf;
+	struct stat	info;
+	int			fd;
+	char		*buf;
 
 	fd = open(argv[1], O_RDONLY); 
 	fstat(fd, &info);
@@ -34,13 +35,6 @@ int	change_directory(char	**argv)
 		return (1);
 	if (S_ISDIR(info.st_mode))
 	{
-		getcwd(buf, 1024);
-		buf = ft_strjoin(buf, "/");
-		if (!buf)
-			return (1);
-		buf = ft_strjoin(buf, argv[1]);
-		if (!buf)
-			return (1);
 		chdir(argv[1]);
 		getcwd(buf, 1024);
 		ft_htable_insert(g_state.envp, "PWD", buf);
@@ -80,9 +74,9 @@ int	echo(char **argv)
 		i++;
 	}
 	if (nline_flag)
-		printf("%s", echo_str);
+		ft_printf("%s", echo_str);
 	else
-		printf("%s\n", echo_str);
+		ft_printf("%s\n", echo_str);
 	return (0);
 }
 
