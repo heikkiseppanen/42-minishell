@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/12 20:17:35 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/12 21:37:12 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,10 +129,11 @@ static void	grab_env_str(t_sym_state *s_s, t_exp_state *e_s, const char *string)
 	e_s->env[e_s->i] = '\0';
 }
 
-int	handle_exp(t_sym_state *s_s, const char *string)
+static int	handle_exp(t_sym_state *s_s, const char *string)
 {
 	t_exp_state e_s;
 
+	s_s->i++;
 	e_s.env = alloc_env(s_s, string);
 	if (!e_s.env)
 		return (0);
@@ -154,10 +155,51 @@ int	handle_exp(t_sym_state *s_s, const char *string)
 	return (1);
 }
 
+static void	open_quote(t_sym_state *s_s, const char *string)
+{
+	s_s->openchar = '"';
+	if (string[s_s->i] == '\'')
+		s_s->openchar = '\'';
+	s_s->open = 1;
+}
+
+static void	close_quote(t_sym_state *s_s)
+{
+	s_s->openchar = 0;
+	s_s->open = -1;
+}
+
+static int process_tokenstream(t_sym_state *s_s, const char *string)
+{
+	int	rval;
+	while(string[s_s->i])
+	{
+		if ((string[s_s->i] == '"' || string[s_s->i] == '\'') && s_s->open < 0)
+			open_quote(s_s, string);
+		else if ((string[s_s->i] == s_s->openchar) && s_s->open > 0)
+			close_quote(s_s);
+		else if ((string[s_s->i] == '$') && (s_s->openchar == '"' || s_s->open < 0))
+		{
+			rval = handle_exp(s_s, string);
+			if (!rval)
+				return (0);
+			if (rval == 1)
+				continue ;
+			break ;
+		}
+		else
+		{
+			if (!buf_pushback(s_s->buf, (void *)(&string[s_s->i]), 1))
+				return (0);
+		}
+		s_s->i++;
+	}
+	return (1);
+}
+
 char	*str_expand(const char *string)
 {
 	t_sym_state	s;
-	int			rval;
 	char		*expanded;
 
 	s.i = 0;
@@ -166,38 +208,9 @@ char	*str_expand(const char *string)
 	s.buf = malloc(sizeof(t_buf));
 	if (!s.buf || !(buf_init(s.buf, 1024, 1)))
 		return (NULL);
-	while(string[s.i])
-	{
-		if ((string[s.i] == '"' || string[s.i] == '\'') && s.open < 0)
-		{
-			s.openchar = '"';
-			if (string[s.i] == '\'')
-				s.openchar = '\'';
-			s.open = 1;
-		}
-		else if ((string[s.i] == s.openchar) && s.open > 0)
-		{
-			s.openchar = 0;
-			s.open = -1;
-		}
-		else if ((string[s.i] == '$') && (s.openchar == '"' || s.open < 0))
-		{
-			s.i++;
-			rval = handle_exp(&s, string);
-			if (!rval)
-				return (NULL);
-			if (rval == 1)
-				continue ;
-			break ;
-		}
-		else
-		{
-			if (!buf_pushback(s.buf, (void *)(&string[s.i]), 1))
-				return (NULL);
-		}
-		s.i++;
-	}
 	if (!buf_pushback(s.buf, "", 1))
+		return (NULL);
+	if (!process_tokenstream(&s, string))
 		return (NULL);
 	expanded = ft_strdup((char *)s.buf->data);
 	buf_del(s.buf);
