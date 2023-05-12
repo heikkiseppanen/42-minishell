@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:39:41 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/11 11:06:55 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/12 14:29:26 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,27 @@ static t_main	get_sub_process(const char *arg0)
 		return (launch_executable);
 	}
 	return (executor);
+}
+
+static int	execute_locally(t_main process, char **argv, t_ast_node *redir)
+{
+	const int	std_in = dup(STDIN_FILENO);
+	const int	std_out = dup(STDOUT_FILENO);
+	const int	std_err = dup(STDERR_FILENO);
+	int	exit_status;
+
+	exit_status = 0;
+	if (perform_redirections(redir) == MS_SUCCESS)
+	{
+		exit_status = process(argv);
+	}
+	dup2(std_in, STDIN_FILENO);
+	dup2(std_out, STDOUT_FILENO);
+	dup2(std_err, STDERR_FILENO);
+	close(std_in);
+	close(std_out);
+	close(std_err);
+	return (exit_status);
 }
 
 pid_t	launch_command(t_ast_node *command, t_pipe *in, t_pipe *out)
@@ -80,9 +101,7 @@ int	execute_command(t_ast_node *command)
 	{
 		process = fork();
 		if (process == -1)
-		{
 			return (1);
-		}
 		if (process == 0)
 		{
 			perform_redirections(ast_right(command));
@@ -92,7 +111,7 @@ int	execute_command(t_ast_node *command)
 	}
 	else
 	{
-		exit_status = sub_process(argv);
+		exit_status = execute_locally(sub_process, argv, ast_right(command));
 	}
 	ft_strarr_del(argv);
 	return (WEXITSTATUS(exit_status));
