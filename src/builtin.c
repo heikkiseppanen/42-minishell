@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 16:59:51 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/11 21:47:15 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/12 14:37:22 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int	change_directory(char	**argv)
 	fd = open(argv[1], O_RDONLY); 
 	fstat(fd, &info);
 	buf = malloc(1024);
+	close(fd);
 	if (!buf)
 		return (1);
 	if (S_ISDIR(info.st_mode))
