@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:49:46 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/05 15:52:25 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/12 13:47:32 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include "tokenizer.h"
 
-t_ast_node *parse_pipeline(t_token **iterator)
+t_ast_node	*parse_pipeline(t_token **iterator)
 {
 	t_ast_node		*pipe;
 	t_ast_branch	node_data;
