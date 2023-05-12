@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/12 21:37:12 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/12 21:51:16 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,8 @@ static void	close_quote(t_sym_state *s_s)
 
 static int process_tokenstream(t_sym_state *s_s, const char *string)
 {
-	int	rval;
+	int	exp_ret;
+
 	while(string[s_s->i])
 	{
 		if ((string[s_s->i] == '"' || string[s_s->i] == '\'') && s_s->open < 0)
@@ -180,10 +181,10 @@ static int process_tokenstream(t_sym_state *s_s, const char *string)
 			close_quote(s_s);
 		else if ((string[s_s->i] == '$') && (s_s->openchar == '"' || s_s->open < 0))
 		{
-			rval = handle_exp(s_s, string);
-			if (!rval)
+			exp_ret = handle_exp(s_s, string);
+			if (!exp_ret)
 				return (0);
-			if (rval == 1)
+			if (exp_ret == 1)
 				continue ;
 			break ;
 		}
@@ -208,9 +209,9 @@ char	*str_expand(const char *string)
 	s.buf = malloc(sizeof(t_buf));
 	if (!s.buf || !(buf_init(s.buf, 1024, 1)))
 		return (NULL);
-	if (!buf_pushback(s.buf, "", 1))
-		return (NULL);
 	if (!process_tokenstream(&s, string))
+		return (NULL);
+	if (!buf_pushback(s.buf, "", 1))
 		return (NULL);
 	expanded = ft_strdup((char *)s.buf->data);
 	buf_del(s.buf);
