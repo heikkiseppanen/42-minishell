@@ -37,16 +37,22 @@ IO_SRC :=\
 	pipe.c\
 	redir.c\
 
+EXP_DIR := expansion
+EXP_SRC:=\
+	arg_expand.c\
+	dollar_expand.c\
+	token_checks.c\
+
 SRC :=\
 	main.c\
 	signal.c\
 	builtin.c\
-	expand.c\
 	$(AST_SRC:%=$(AST_DIR)/%)\
 	$(TOKENIZER_SRC:%=$(TOKENIZER_DIR)/%)\
 	$(PARSER_SRC:%=$(PARSER_DIR)/%)\
 	$(INTERPRETER_SRC:%=$(INTERPRETER_DIR)/%)\
 	$(IO_SRC:%=$(IO_DIR)/%)\
+	$(EXP_SRC:%=$(EXP_DIR)/%)\
 
 OBJ := $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 DEP := $(OBJ:%.o=%.d)
