@@ -6,14 +6,14 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 22:35:52 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/12 22:42:18 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/12 22:51:09 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expand.h"
 #include "minishell.h"
 
-extern t_shell_state g_state;
+extern t_shell_state	g_state;
 
 static void	grab_env_str(t_sym_state *s_s, t_exp_state *e_s, const char *string)
 {
@@ -46,7 +46,7 @@ static char	*alloc_env(t_sym_state *s, const char *string)
 
 int	handle_exp(t_sym_state *s_s, const char *string)
 {
-	t_exp_state e_s;
+	t_exp_state	e_s;
 
 	s_s->i++;
 	e_s.env = alloc_env(s_s, string);

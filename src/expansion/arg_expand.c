@@ -6,14 +6,14 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/12 22:40:16 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/13 03:27:13 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "expand.h"
 
-extern t_shell_state g_state;
+extern t_shell_state	g_state;
 
 static void	open_quote(t_sym_state *s_s, const char *string)
 {
@@ -29,17 +29,18 @@ static void	close_quote(t_sym_state *s_s)
 	s_s->open = -1;
 }
 
-static int process_tokenstream(t_sym_state *s_s, const char *string)
+static int	process_tokenstream(t_sym_state *s_s, const char *string)
 {
 	int	exp_ret;
 
-	while(string[s_s->i])
+	while (string[s_s->i])
 	{
 		if ((string[s_s->i] == '"' || string[s_s->i] == '\'') && s_s->open < 0)
 			open_quote(s_s, string);
 		else if ((string[s_s->i] == s_s->openchar) && s_s->open > 0)
 			close_quote(s_s);
-		else if ((string[s_s->i] == '$') && (s_s->openchar == '"' || s_s->open < 0))
+		else if ((string[s_s->i] == '$')
+			&& (s_s->openchar == '"' || s_s->open < 0))
 		{
 			exp_ret = handle_exp(s_s, string);
 			if (!exp_ret)
@@ -49,16 +50,14 @@ static int process_tokenstream(t_sym_state *s_s, const char *string)
 			break ;
 		}
 		else
-		{
 			if (!buf_pushback(s_s->buf, (void *)(&string[s_s->i]), 1))
 				return (0);
-		}
 		s_s->i++;
 	}
 	return (1);
 }
 
-char	*str_expand(const char *string)
+char	*arg_expand(const char *string)
 {
 	t_sym_state	s;
 	char		*expanded;
@@ -95,7 +94,7 @@ char	**expand_arglist(char **argv)
 	i = 0;
 	while (argv[i])
 	{
-		expanded[i] = str_expand(argv[i]);
+		expanded[i] = arg_expand(argv[i]);
 		i++;
 	}
 	expanded[i] = NULL;

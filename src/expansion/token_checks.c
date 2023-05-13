@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   checks.c                                           :+:      :+:    :+:   */
+/*   token_checks.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 22:39:13 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/12 22:41:29 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/13 03:26:54 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "expand.h"
 #include "minishell.h"
 
-extern t_shell_state g_state;
+extern t_shell_state	g_state;
 
 static int	check_questionmark(t_sym_state *s, char *envres, char *env)
 {
@@ -49,7 +49,7 @@ static int	check_null(t_sym_state *s, char *env)
 
 static int	check_other(t_sym_state *s, char *env, const char *string)
 {
-	if (!buf_pushback(s->buf, (void *)((&string[s->i])-1), 2))
+	if (!buf_pushback(s->buf, (void *)((&string[s->i]) - 1), 2))
 	{
 		buf_del(s->buf);
 		free(env);
@@ -71,6 +71,8 @@ void	check_underscore(t_sym_state *s_s, t_exp_state *e_s, const char *string)
 
 int	check_first_tok(t_sym_state *s_s, t_exp_state *e_s, const char *string)
 {
+	if (string[s_s->i] == '"' || string[s_s->i] == '\'')
+		return (1);
 	if (string[s_s->i] == '?')
 		return (check_questionmark(s_s, e_s->envres, e_s->env));
 	else
