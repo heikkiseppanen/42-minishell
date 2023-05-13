@@ -6,18 +6,16 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:29:23 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/10 04:23:11 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/13 04:29:37 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sig.h"
 #include <signal.h>
-#include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
-#include <termios.h>
 
 void	return_prompt(void)
 {
