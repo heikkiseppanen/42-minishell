@@ -43,16 +43,25 @@ EXP_SRC:=\
 	dollar_expand.c\
 	token_checks.c\
 
+BUILTIN_DIR := builtins
+BUILTIN_SRC:=\
+	b_cd.c\
+	b_echo.c\
+	b_env.c\
+	b_export.c\
+	b_pwd.c\
+	b_unset.c\
+
 SRC :=\
 	main.c\
 	signal.c\
-	builtin.c\
 	$(AST_SRC:%=$(AST_DIR)/%)\
 	$(TOKENIZER_SRC:%=$(TOKENIZER_DIR)/%)\
 	$(PARSER_SRC:%=$(PARSER_DIR)/%)\
 	$(INTERPRETER_SRC:%=$(INTERPRETER_DIR)/%)\
 	$(IO_SRC:%=$(IO_DIR)/%)\
 	$(EXP_SRC:%=$(EXP_DIR)/%)\
+	$(BUILTIN_SRC:%=$(BUILTIN_DIR)/%)\
 
 OBJ := $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 DEP := $(OBJ:%.o=%.d)
