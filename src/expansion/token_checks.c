@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 22:39:13 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/13 03:26:54 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/13 04:03:26 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,16 +71,15 @@ void	check_underscore(t_sym_state *s_s, t_exp_state *e_s, const char *string)
 
 int	check_first_tok(t_sym_state *s_s, t_exp_state *e_s, const char *string)
 {
-	if (string[s_s->i] == '"' || string[s_s->i] == '\'')
+	if ((string[s_s->i] == '"' || string[s_s->i] == '\'') && (s_s->open > 0))
+		return (check_null(s_s, e_s->env));
+	if ((string[s_s->i] == '"' || string[s_s->i] == '\'') && (s_s->open < 0))
 		return (1);
 	if (string[s_s->i] == '?')
 		return (check_questionmark(s_s, e_s->envres, e_s->env));
-	else
-	{
-		if (!string[s_s->i])
-			return (check_null(s_s, e_s->env));
-		if (!ft_isalpha(string[s_s->i]))
-			return (check_other(s_s, e_s->env, string));
-	}
+	if (!string[s_s->i])
+		return (check_null(s_s, e_s->env));
+	if (!ft_isalpha(string[s_s->i]))
+		return (check_other(s_s, e_s->env, string));
 	return (0);
 }
