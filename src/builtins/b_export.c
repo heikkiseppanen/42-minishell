@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:09:17 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/13 04:19:06 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/13 05:30:29 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ int	put_exp(char	**argv)
 	while (i < g_state.envp->cap)
 	{
 		if (g_state.envp->memory[i])
-			ft_printf("%s=%s\n", g_state.envp->memory[i]->key, g_state.envp->memory[i]->value);
+			ft_printf("%s=%s\n", g_state.envp->memory[i]->key,
+				g_state.envp->memory[i]->value);
 		i++;
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:07:10 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/13 05:06:10 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/13 05:29:48 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@
 #include "libft.h"
 #include "minishell.h"
 
-extern t_shell_state	g_state; 
+extern t_shell_state	g_state;
 
 int	go_to_dir(struct stat info, char **argv, char *buf)
 {
-	char	*old_pwd = ft_strdup(ft_htable_get(g_state.envp, "PWD"));
+	char	*old_pwd;
 
 	old_pwd = ft_strdup(ft_htable_get(g_state.envp, "PWD"));
 	if (S_ISDIR(info.st_mode) && old_pwd)
@@ -52,7 +52,7 @@ int	change_directory(char	**argv)
 	int			fd;
 	char		*buf;
 
-	fd = open(argv[1], O_RDONLY); 
+	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 	{
 		perror("cd");
@@ -65,4 +65,3 @@ int	change_directory(char	**argv)
 		return (1);
 	return (0);
 }
-
