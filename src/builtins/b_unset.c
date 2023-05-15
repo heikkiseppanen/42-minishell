@@ -1,37 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   b_unset.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/20 10:29:23 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/13 04:29:37 by lsileoni         ###   ########.fr       */
+/*   Created: 2023/05/13 04:20:19 by lsileoni          #+#    #+#             */
+/*   Updated: 2023/05/13 05:31:29 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sig.h"
-#include <signal.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
+#include "minishell.h"
 
-void	return_prompt(void)
-{
-	ioctl(STDIN_FILENO, TIOCSTI, "\n");
-	rl_replace_line("", 0);
-	rl_on_new_line();
-}
+extern t_shell_state	g_state;
 
-void	sig_handler(int signum)
+int	unset_var(char	**argv)
 {
-	if (signum == SIGINT)
-		return_prompt();
-}
-
-void	init_sighandler(void)
-{
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, sig_handler);
+	(void)argv;
+	if (ft_htable_remove(g_state.envp, argv[1]) == -1)
+		return (1);
+	return (0);
 }

@@ -1,37 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/20 10:29:23 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/13 04:29:37 by lsileoni         ###   ########.fr       */
+/*   Created: 2023/05/02 15:50:42 by lsileoni          #+#    #+#             */
+/*   Updated: 2023/05/04 17:33:52 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sig.h"
-#include <signal.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#ifndef BUILTINS_H
+# define BUILTINS_H
 #include <unistd.h>
-#include <sys/ioctl.h>
+#include <stdio.h>
+#include "libft.h"
 
-void	return_prompt(void)
-{
-	ioctl(STDIN_FILENO, TIOCSTI, "\n");
-	rl_replace_line("", 0);
-	rl_on_new_line();
-}
+int	change_directory(const char	*pathname);
+int	echo(char **argv);
+int	put_cwd();
+int	export_var(char *str);
+int	put_env(char	**envp);
+int	unset_var(char	**argv);
 
-void	sig_handler(int signum)
-{
-	if (signum == SIGINT)
-		return_prompt();
-}
-
-void	init_sighandler(void)
-{
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, sig_handler);
-}
+#endif

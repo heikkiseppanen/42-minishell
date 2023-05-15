@@ -24,15 +24,44 @@ PARSER_SRC :=\
 	parse_command.c\
 	parse_parameters.c\
 
+INTERPRETER_DIR := interpreter
+INTERPRETER_SRC :=\
+	interpreter.c\
+	pipeline.c\
+	redirection.c\
+	command.c\
+	process.c\
+
+IO_DIR := io
+IO_SRC :=\
+	pipe.c\
+	redir.c\
+
+EXP_DIR := expansion
+EXP_SRC:=\
+	arg_expand.c\
+	dollar_expand.c\
+	token_checks.c\
+
+BUILTIN_DIR := builtins
+BUILTIN_SRC:=\
+	b_cd.c\
+	b_echo.c\
+	b_env.c\
+	b_export.c\
+	b_pwd.c\
+	b_unset.c\
+
 SRC :=\
 	main.c\
 	signal.c\
-	interpreter.c\
-	redirection.c\
-	pipe.c\
-	$(TOKENIZER_SRC:%=$(TOKENIZER_DIR)/%)\
 	$(AST_SRC:%=$(AST_DIR)/%)\
+	$(TOKENIZER_SRC:%=$(TOKENIZER_DIR)/%)\
 	$(PARSER_SRC:%=$(PARSER_DIR)/%)\
+	$(INTERPRETER_SRC:%=$(INTERPRETER_DIR)/%)\
+	$(IO_SRC:%=$(IO_DIR)/%)\
+	$(EXP_SRC:%=$(EXP_DIR)/%)\
+	$(BUILTIN_SRC:%=$(BUILTIN_DIR)/%)\
 
 OBJ := $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 DEP := $(OBJ:%.o=%.d)
@@ -77,6 +106,7 @@ clean:
 	/bin/rm -rf $(OBJDIR)
 
 fclean: clean
+	make fclean -C $(FT_DIR)
 	/bin/rm -f $(NAME)
 
 re: fclean all

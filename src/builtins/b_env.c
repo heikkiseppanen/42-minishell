@@ -1,37 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.c                                           :+:      :+:    :+:   */
+/*   b_env.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/20 10:29:23 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/13 04:29:37 by lsileoni         ###   ########.fr       */
+/*   Created: 2023/05/13 04:18:19 by lsileoni          #+#    #+#             */
+/*   Updated: 2023/05/13 05:30:15 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sig.h"
-#include <signal.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
+#include "minishell.h"
 
-void	return_prompt(void)
-{
-	ioctl(STDIN_FILENO, TIOCSTI, "\n");
-	rl_replace_line("", 0);
-	rl_on_new_line();
-}
+extern t_shell_state	g_state;
 
-void	sig_handler(int signum)
+int	put_env(char	**argv)
 {
-	if (signum == SIGINT)
-		return_prompt();
-}
+	size_t					i;
 
-void	init_sighandler(void)
-{
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, sig_handler);
+	(void)argv;
+	i = 0;
+	while (i < g_state.envp->cap)
+	{
+		if (g_state.envp->memory[i])
+			ft_printf("%s=%s\n", g_state.envp->memory[i]->key,
+				g_state.envp->memory[i]->value);
+		i++;
+	}
+	return (0);
 }
