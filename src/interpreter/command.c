@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:39:41 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/12 14:29:26 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/15 20:44:08 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ static t_main	get_sub_process(const char *arg0)
 		&elements[1],
 		&elements[2],
 		&elements[3],
-		&elements[4]};
-	static t_htable		table = {pointers, 5, 5};
+		&elements[4],
+		&elements[5]};
+	static t_htable		table = {pointers, 6, 6};
 	const t_main	executor = ft_htable_get(&table, arg0);
 
 	if (!executor)
