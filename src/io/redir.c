@@ -6,12 +6,15 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 12:10:16 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/16 08:52:32 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/16 10:29:12 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "redir.h"
 
+#include "pipe.h"
+
+#include <libft.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -19,7 +22,7 @@
 
 void	redir_del(t_redir *instances, int size)
 {
-	t_redir *it;
+	t_redir	*it;
 
 	if (!instances || !size)
 		return ;
@@ -35,66 +38,56 @@ void	redir_del(t_redir *instances, int size)
 	free(instances);
 }
 
-#include "pipe.h"
-#include <readline/readline.h>
-#include <libft.h>
-
-e_err	redir_execute(const t_redir *instance)
+static int	open_basic_file(const char *path, int flags)
 {
-	if (instance->operation == REDIR_OUT_APPEND)
-	{
-		const int flags = O_CREAT | O_WRONLY | O_APPEND;
-		const int mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
-		const int file = open(instance->argument, flags, mode);
+	const int	mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+	const int	file = open(path, flags, mode);
 
-		if (file < 0)
-		{
-			perror(instance->argument);
-			return (MS_FAIL);
-		}
-		if (dup2(file, instance->file_descriptor) == -1 || close(file) == -1)
-			perror("redir error");
-		return (MS_SUCCESS);
+	if (file == -1)
+	{
+		perror(path);
 	}
-	else if (instance->operation == REDIR_OUT_TRUNC)
-	{
-		const int flags = O_CREAT | O_WRONLY | O_TRUNC;
-		const int mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
-		const int file = open(instance->argument, flags, mode);
+	return (file);
+}
 
-		if (file < 0)
-		{
-			perror(instance->argument);
-			return (MS_FAIL);
-		}
-		if (dup2(file, instance->file_descriptor) == -1 || close(file) == -1)
-			perror("redir error");
-		return (MS_SUCCESS);
+static int	open_here_doc(const char *here_doc)
+{
+	t_pipe	file;
+
+	if (!pipe_init(&file))
+	{
+		return (-1);
 	}
-	else if (instance->operation == REDIR_IN_FILE)
-	{
-		const int flags = O_RDONLY;
-		const int file = open(instance->argument, flags);
+	write(file.write, here_doc, ft_strlen(here_doc));
+	close(file.write);
+	return (file.read);
+}
 
-		if (file < 0)
-		{
-			perror(instance->argument);
-			return (MS_FAIL);
-		}
-		dup2(file, instance->file_descriptor);
-		close(file);
-		return (MS_SUCCESS);
+e_err	redir_execute(const t_redir *redir)
+{
+	int	file;
+
+	file = -1;
+	if (redir->operation == REDIR_OUT_APPEND)
+	{
+		file = open_basic_file(redir->argument, O_CREAT | O_WRONLY | O_APPEND);
 	}
-	else if (instance->operation == REDIR_IN_HEREDOC)
+	else if (redir->operation == REDIR_OUT_TRUNC)
 	{
-		t_pipe	here_doc;
-
-		if (!pipe_init(&here_doc))
-			return (MS_FAIL);
-		write(here_doc.write, instance->argument, ft_strlen(instance->argument));
-		pipe_connect(here_doc.read, instance->file_descriptor, here_doc.write);
-		return (MS_SUCCESS);
+		file = open_basic_file(redir->argument, O_CREAT | O_WRONLY | O_TRUNC);
+	}
+	else if (redir->operation == REDIR_IN_FILE)
+	{
+		file = open_basic_file(redir->argument, O_RDONLY);
+	}
+	else if (redir->operation == REDIR_IN_HEREDOC)
+	{
+		file = open_here_doc(redir->argument);
+	}
+	if (file == -1
+		|| dup2(file, redir->file_descriptor) == -1 || close(file) == -1)
+	{
+		return (MS_FAIL);
 	}
 	return (MS_SUCCESS);
 }
-

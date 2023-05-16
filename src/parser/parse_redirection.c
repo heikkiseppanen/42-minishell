@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 09:12:17 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/16 09:22:27 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/16 10:00:55 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,18 @@ static char	*read_here_doc(const char *eof, size_t size)
 	return (NULL);
 }
 
-static char	*parse_redirection_argument(t_token **iterator)
+static const char	*parse_redirection_argument(t_token **iterator)
 {
+	const char	*argument;
+
 	if (!token_is(*iterator, TOK_WORD))
 	{
 		unexpect(*iterator);
 		return (NULL);
 	}
+	argument = token_to_str(*iterator);
 	*iterator += 1;
-	return (token_to_str(*iterator));
+	return (argument);
 }
 
 static e_redir_op	parse_redirection_operation(t_token **iterator)
