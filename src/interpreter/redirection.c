@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 09:54:05 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/16 06:54:02 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/16 09:17:38 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ e_err	perform_redirections(t_ast_node *redirections)
 			return (MS_FAIL);
 		}
 		status = redir_execute(tmp);
+		free(tmp);
 		++it;
 	}
 	return (status);
