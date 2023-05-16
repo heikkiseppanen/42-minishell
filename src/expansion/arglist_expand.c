@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 01:55:29 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/16 02:47:30 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/16 03:47:09 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ char	**return_expanded_list(char **argv, size_t count)
 			elem_count++;
 		i++;
 	}
+	if (!elem_count)
+		return (NULL);
 	complete_list = ft_calloc(elem_count + 1, sizeof(char *));
 	j = 0;
 	i = 0;
