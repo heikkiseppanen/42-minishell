@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 12:10:16 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/16 10:29:12 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/16 10:30:56 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@
 #include "pipe.h"
 
 #include <libft.h>
-#include <stdlib.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <stdio.h>
 
 void	redir_del(t_redir *instances, int size)
