@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 11:23:45 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/10 14:36:24 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/16 08:52:01 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,11 @@ void		ast_node_del(t_ast_node *root);
 t_ast_node	*ast_left(t_ast_node *node);
 t_ast_node	*ast_right(t_ast_node *node);
 
-e_err 		parse_parameters(t_token **iterator, t_buf *argv, t_buf *redir);
-t_ast_node	*parse_command(t_token **iterator);
 t_ast_node	*parse_pipeline(t_token **iterator);
+t_ast_node	*parse_command(t_token **iterator);
+e_err 		parse_parameters(t_token **iterator, t_buf *argv, t_buf *redir);
+e_err		parse_argument(t_token **iterator, t_buf *argv_out);
+e_err		parse_redirection(t_token **iterator, t_buf *redir_out);
 e_err		unexpect(const t_token *token);
 
 e_err		interpret_ast(t_ast_node *root);

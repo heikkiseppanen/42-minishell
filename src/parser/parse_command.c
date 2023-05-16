@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:47:14 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 19:47:45 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/12 13:49:32 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ t_ast_node	*parse_command(t_token **iterator)
 	t_ast_node		*command;
 
 	if (!(buf_init(&argv, AST_INITIAL_ARGC, sizeof(char *))
-		& buf_init(&redir, AST_INITIAL_ARGC, sizeof(t_redir)))
+			& buf_init(&redir, AST_INITIAL_ARGC, sizeof(t_redir)))
 		|| !parse_parameters(iterator, &argv, &redir))
 	{
 		buf_del(&argv);
@@ -95,4 +95,3 @@ t_ast_node	*parse_command(t_token **iterator)
 	}
 	return (command);
 }
-

@@ -23,6 +23,8 @@ PARSER_SRC :=\
 	parse_pipeline.c\
 	parse_command.c\
 	parse_parameters.c\
+	parse_redirection.c\
+	parse_argument.c\
 
 INTERPRETER_DIR := interpreter
 INTERPRETER_SRC :=\
