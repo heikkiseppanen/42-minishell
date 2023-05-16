@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 09:12:17 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/12 13:40:59 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/16 09:22:27 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ static char	*parse_redirection_argument(t_token **iterator)
 		unexpect(*iterator);
 		return (NULL);
 	}
+	*iterator += 1;
 	return (token_to_str(*iterator));
 }
 
