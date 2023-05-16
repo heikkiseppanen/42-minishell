@@ -40,6 +40,7 @@ IO_SRC :=\
 EXP_DIR := expansion
 EXP_SRC:=\
 	arg_expand.c\
+	arglist_expand.c\
 	dollar_expand.c\
 	token_checks.c\
 

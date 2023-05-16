@@ -6,11 +6,12 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 13:54:37 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/11 20:58:16 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/15 22:33:32 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft.h"
+#include <stddef.h>
 
 t_htable	*ft_htable_create(unsigned int init_size)
 {
@@ -50,6 +51,8 @@ void	*ft_htable_get(t_htable *table, const char *key)
 {
 	unsigned long long	key_hash;
 	t_htelem			*orig_elem;
+	size_t				t_len;
+	size_t				a_len;
 
 	if (!table || !key)
 		return (NULL);
@@ -59,8 +62,10 @@ void	*ft_htable_get(t_htable *table, const char *key)
 	{
 		if (table->memory[key_hash % table->cap])
 		{
-			if (!ft_strncmp(key, table->memory[key_hash % table->cap]->key, \
-						ft_strlen(key)))
+			a_len = ft_strlen(key);
+			t_len = ft_strlen(table->memory[key_hash % table->cap]->key);
+			if (!ft_strncmp(key, table->memory[key_hash % table->cap]->key, t_len)
+				&& t_len == a_len)
 				return (table->memory[key_hash % table->cap]->value);
 		}
 		key_hash++;
