@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 07:52:30 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/12 22:41:58 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/16 01:57:20 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_exp_state
 }	t_exp_state;
 
 char	*str_expand(const char *string);
+char	*arg_expand(const char *string);
 char	**expand_arglist(char **argv);
 int		handle_exp(t_sym_state *s_s, const char *string);
 int		check_first_tok(t_sym_state *s_s, t_exp_state *e_s, const char *string);
