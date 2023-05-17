@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 09:54:05 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/16 21:16:37 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/17 10:13:59 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,18 @@
 
 #include <stdio.h>
 
+void	redir_arg_expand(t_redir *redir)
+{
+	const char			*old = redir->argument;
+
+	redir->argument = arg_expand(redir->argument);
+	free((void *)old);
+}
+
 e_err	perform_redirections(t_ast_node *redirections)
 {
 	const t_redir 	*it = redirections->data.redir.array;
 	const t_redir 	*end = it + redirections->data.redir.size;
-	t_redir 		*tmp;
 	e_err			status;
 
 	if (redirections->type != AST_REDIR)
@@ -30,13 +37,12 @@ e_err	perform_redirections(t_ast_node *redirections)
 	status = MS_SUCCESS;
 	while (it != end && status == MS_SUCCESS)
 	{
-		tmp = (t_redir *)it;
-		tmp->argument = arg_expand(tmp->argument);
-		if (!tmp->argument)
+		redir_arg_expand((t_redir *)it);
+		if (!it->argument)
 		{
 			return (MS_FAIL);
 		}
-		status = redir_execute(tmp);
+		status = redir_execute(it);
 		++it;
 	}
 	return (status);
