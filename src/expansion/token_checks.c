@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 22:39:13 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/13 04:03:26 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/17 06:51:27 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,25 @@
 
 extern t_shell_state	g_state;
 
-static int	check_questionmark(t_sym_state *s, char *envres, char *env)
+static int	check_questionmark(t_sym_state *s, char *env)
 {
-	envres = ft_itoa(g_state.pipeline_err);
-	if (!envres)
+	char	*p_err;
+
+	p_err = ft_itoa(g_state.pipeline_err);
+	if (!p_err)
 	{
 		buf_del(s->buf);
 		free(env);
 		return (0);
 	}
-	if (!buf_pushback(s->buf, envres, ft_strlen(envres)))
+	if (!buf_pushback(s->buf, p_err, ft_strlen(p_err)))
 	{
 		buf_del(s->buf);
 		free(env);
-		free(envres);
+		free(p_err);
 		return (0);
 	}
-	free(envres);
+	free(p_err);
 	s->i++;
 	return (1);
 }
@@ -76,7 +78,7 @@ int	check_first_tok(t_sym_state *s_s, t_exp_state *e_s, const char *string)
 	if ((string[s_s->i] == '"' || string[s_s->i] == '\'') && (s_s->open < 0))
 		return (1);
 	if (string[s_s->i] == '?')
-		return (check_questionmark(s_s, e_s->envres, e_s->env));
+		return (check_questionmark(s_s, e_s->env));
 	if (!string[s_s->i])
 		return (check_null(s_s, e_s->env));
 	if (!ft_isalpha(string[s_s->i]))
