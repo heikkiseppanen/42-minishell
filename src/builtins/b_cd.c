@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:07:10 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/13 05:29:48 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/17 08:37:28 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,29 +20,33 @@
 
 extern t_shell_state	g_state;
 
+int	error_return(char *s1, char *s2)
+{
+	if (s1)
+		free(s1);
+	if (s2)
+		free(s2);
+	perror("cd");
+	return (1);
+}
+
 int	go_to_dir(struct stat info, char **argv, char *buf)
 {
 	char	*old_pwd;
 
 	old_pwd = ft_strdup(ft_htable_get(g_state.envp, "PWD"));
-	if (S_ISDIR(info.st_mode) && old_pwd)
+	if (!old_pwd)
+		return (error_return(buf, NULL));
+	if (S_ISDIR(info.st_mode))
 	{
 		if (chdir(argv[1]) != 0)
-		{
-			perror("cd");
-			free(buf);
-			return (1);
-		}
+			return (error_return(buf, NULL));
 		getcwd(buf, 1024);
 		ft_htable_insert(g_state.envp, "PWD", buf);
 		ft_htable_insert(g_state.envp, "OLDPWD", old_pwd);
 	}
 	else
-	{
-		perror("cd");
-		free(buf);
-		return (1);
-	}
+		return (error_return(buf, old_pwd));
 	return (0);
 }
 
@@ -61,7 +65,9 @@ int	change_directory(char	**argv)
 	fstat(fd, &info);
 	close(fd);
 	buf = malloc(1024);
-	if (!buf || go_to_dir(info, argv, buf))
+	if (!buf)
+		return (1);
+	if (go_to_dir(info, argv, buf))
 		return (1);
 	return (0);
 }

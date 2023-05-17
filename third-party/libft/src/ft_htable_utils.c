@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 07:37:09 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/11 20:58:28 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/17 08:07:24 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ long long	get_message_hash(const char *message)
 	return (hash);
 }
 
-int	ft_restructure_table(t_htable *table, char *key, void *value)
+int	ft_restructure_table(t_htable *table, const char *key, void *value)
 {
-	t_htable	*tmp;
-	unsigned int			i;
+	t_htable			*tmp;
+	unsigned int		i;
 
 	tmp = ft_htable_create(table->cap * 2);
 	if (!tmp)
@@ -52,19 +52,23 @@ int	ft_restructure_table(t_htable *table, char *key, void *value)
 	return (1);
 }
 
-int	ft_probe_table(t_htable *table, char *key, void *value)
+int	ft_probe_table(t_htable *table, const char *key, void *value)
 {
 	unsigned long long	key_hash;
-	unsigned long long     index;
+	unsigned long long	index;
+	char				*dup_key;
 
 	key_hash = get_message_hash(key);
 	while (1)
 	{
-	        index = key_hash % table->cap;
+		index = key_hash % table->cap;
 		if (!table->memory[index])
 		{
+			dup_key = ft_strdup(key);
+			if (!dup_key)
+				return (-1);
 			table->memory[index] = malloc(sizeof(t_htelem));
-			table->memory[index]->key = key;
+			table->memory[index]->key = dup_key;
 			table->memory[index]->value = value;
 			table->size++;
 			break ;
@@ -72,6 +76,8 @@ int	ft_probe_table(t_htable *table, char *key, void *value)
 		else if (!ft_strncmp(key, table->memory[index]->key, \
 					ft_strlen(key)))
 		{
+			if (table->memory[index]->value)
+				free(table->memory[index]->value);
 			table->memory[index]->value = value;
 			break ;
 		}
