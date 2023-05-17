@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 12:10:16 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/16 10:30:56 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/17 07:10:44 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ void	redir_del(t_redir *instances, int size)
 	t_redir	*it;
 
 	if (!instances || !size)
+	{
 		return ;
+	}
 	it = instances;
 	while (size--)
 	{

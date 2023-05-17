@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:39:41 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/12 14:29:26 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/16 03:50:21 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,11 @@ static t_main	get_sub_process(const char *arg0)
 		&elements[1],
 		&elements[2],
 		&elements[3],
-		&elements[4]};
-	static t_htable		table = {pointers, 5, 5};
+		&elements[4],
+		&elements[5]};
+	static t_htable		table = {pointers, 6, 6};
+	if (!arg0)
+		return (NULL);
 	const t_main	executor = ft_htable_get(&table, arg0);
 
 	if (!executor)
@@ -93,10 +96,13 @@ pid_t	launch_command(t_ast_node *command, t_pipe *in, t_pipe *out)
 int	execute_command(t_ast_node *command)
 {
 	char **const	argv = expand_arglist(ast_left(command)->data.args.argv);
-	const t_main	sub_process = get_sub_process(argv[0]);
+	t_main			sub_process;
 	pid_t			process;
 	int				exit_status;
 
+	if (!argv)
+		return (0);
+	sub_process = get_sub_process(argv[0]);
 	if (sub_process == launch_executable)
 	{
 		process = fork();

@@ -6,12 +6,14 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/13 03:27:13 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/17 06:59:49 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
 #include "expand.h"
+#include <stddef.h>
 
 extern t_shell_state	g_state;
 
@@ -49,8 +51,7 @@ static int	process_tokenstream(t_sym_state *s_s, const char *string)
 				continue ;
 			break ;
 		}
-		else
-			if (!buf_pushback(s_s->buf, (void *)(&string[s_s->i]), 1))
+		else if (!buf_pushback(s_s->buf, (void *)(&string[s_s->i]), 1))
 				return (0);
 		s_s->i++;
 	}
@@ -74,29 +75,6 @@ char	*arg_expand(const char *string)
 		return (NULL);
 	expanded = ft_strdup((char *)s.buf->data);
 	buf_del(s.buf);
-	return (expanded);
-}
-
-char	**expand_arglist(char **argv)
-{
-	char	**expanded;
-	size_t	i;
-
-	if (!argv)
-		return (NULL);
-	i = 0;
-	expanded = NULL;
-	while (argv[i])
-		i++;
-	expanded = malloc(sizeof(char *) * (i + 1));
-	if (!expanded)
-		return (NULL);
-	i = 0;
-	while (argv[i])
-	{
-		expanded[i] = arg_expand(argv[i]);
-		i++;
-	}
-	expanded[i] = NULL;
+	free(s.buf);
 	return (expanded);
 }
