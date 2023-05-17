@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:13:09 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/13 05:28:38 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/17 07:25:30 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,6 @@ int	echo(char **argv)
 		ft_printf("%s", buf.data);
 	else
 		ft_printf("%s\n", buf.data);
+	buf_del(&buf);
 	return (0);
 }
