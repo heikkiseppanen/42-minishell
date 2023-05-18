@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 11:50:23 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/11 11:21:54 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/18 22:56:31 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,5 @@ int	execute_pipeline(t_ast_node *pipeline_start)
 		++proc_it;
 	}
 	buf_del(&processes);
-	return (exit_status);
+	return (WEXITSTATUS(exit_status));
 }

@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:39:41 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/16 03:50:21 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/18 22:26:41 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "builtins.h"
 #include "expand.h"
 #include "sys/wait.h"
-
+#include "sig.h"
 #include <stdio.h>
 
 static t_main	get_sub_process(const char *arg0)
@@ -53,6 +53,7 @@ static int	execute_locally(t_main process, char **argv, t_ast_node *redir)
 	const int	std_err = dup(STDERR_FILENO);
 	int	exit_status;
 
+	dfl_handler();
 	exit_status = 0;
 	if (perform_redirections(redir) == MS_SUCCESS)
 	{
@@ -69,6 +70,7 @@ static int	execute_locally(t_main process, char **argv, t_ast_node *redir)
 
 pid_t	launch_command(t_ast_node *command, t_pipe *in, t_pipe *out)
 {
+	ign_handler();
 	const pid_t	process = fork();
 	char		**argv;
 
@@ -78,6 +80,7 @@ pid_t	launch_command(t_ast_node *command, t_pipe *in, t_pipe *out)
 	}
 	else if (process == 0)
 	{
+		dfl_handler();
 		if (in != NULL)
 			pipe_connect(in->read, STDIN_FILENO, in->write);
 		if (out != NULL)
@@ -105,11 +108,13 @@ int	execute_command(t_ast_node *command)
 	sub_process = get_sub_process(argv[0]);
 	if (sub_process == launch_executable)
 	{
+		ign_handler();
 		process = fork();
 		if (process == -1)
 			return (1);
 		if (process == 0)
 		{
+			dfl_handler();
 			perform_redirections(ast_right(command));
 			exit(sub_process(argv));
 		}
@@ -117,8 +122,13 @@ int	execute_command(t_ast_node *command)
 	}
 	else
 	{
-		exit_status = execute_locally(sub_process, argv, ast_right(command));
+		return(execute_locally(sub_process, argv, ast_right(command)));
 	}
 	ft_strarr_del(argv);
+	if (WIFSIGNALED(exit_status))
+	{
+		write(1, "\n", 1);
+		return (WTERMSIG(exit_status) + 128);
+	}
 	return (WEXITSTATUS(exit_status));
 }
