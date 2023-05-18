@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/16 03:39:16 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/17 06:59:49 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,6 @@ char	*arg_expand(const char *string)
 		return (NULL);
 	expanded = ft_strdup((char *)s.buf->data);
 	buf_del(s.buf);
+	free(s.buf);
 	return (expanded);
 }

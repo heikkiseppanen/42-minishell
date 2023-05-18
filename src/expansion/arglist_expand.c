@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 01:55:29 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/16 03:47:09 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/17 06:41:42 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,13 @@ char	**return_expanded_list(char **argv, size_t count)
 		if (argv[i])
 		{
 			complete_list[j] = argv[i];
+			argv[i] = NULL;
 			j++;
 		}
 		i++;
 	}
 	complete_list[j] = NULL;
+	free(argv);
 	return (complete_list);
 }
 
@@ -88,6 +90,7 @@ char	**expand_arglist(char **argv)
 			expanded[i] = ft_strdup("");
 		else if (tmp && ft_strlen(tmp))
 			expanded[i] = arg_expand(argv[i]);
+		free(tmp);
 		i++;
 	}
 	return (return_expanded_list(expanded, count));
