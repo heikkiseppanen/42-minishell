@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:07:10 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/17 08:37:28 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/18 22:27:12 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,59 +15,48 @@
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <dirent.h>
 #include "libft.h"
 #include "minishell.h"
 
 extern t_shell_state	g_state;
 
-int	error_return(char *s1, char *s2)
+int	error_return(char *buf)
 {
-	if (s1)
-		free(s1);
-	if (s2)
-		free(s2);
-	perror("cd");
-	return (1);
+	if (buf)
+		free(buf);
+	perror("minishell: cd");
+	return (-1);
 }
 
-int	go_to_dir(struct stat info, char **argv, char *buf)
+int	go_to_dir(char **argv, char *buf)
 {
 	char	*old_pwd;
 
+	old_pwd = ft_htable_get(g_state.envp, "PWD");
+	if (!old_pwd)
+		return (error_return(buf));
 	old_pwd = ft_strdup(ft_htable_get(g_state.envp, "PWD"));
 	if (!old_pwd)
-		return (error_return(buf, NULL));
-	if (S_ISDIR(info.st_mode))
-	{
-		if (chdir(argv[1]) != 0)
-			return (error_return(buf, NULL));
-		getcwd(buf, 1024);
-		ft_htable_insert(g_state.envp, "PWD", buf);
-		ft_htable_insert(g_state.envp, "OLDPWD", old_pwd);
-	}
-	else
-		return (error_return(buf, old_pwd));
+		return (error_return(buf));
+	if (!opendir(argv[1]))
+		return (error_return(buf));
+	if (chdir(argv[1]) != 0)
+		return (error_return(buf));
+	getcwd(buf, 1024);
+	ft_htable_insert(g_state.envp, "PWD", buf);
+	ft_htable_insert(g_state.envp, "OLDPWD", old_pwd);
 	return (0);
 }
 
-int	change_directory(char	**argv)
+int	change_directory(char **argv)
 {
-	struct stat	info;
-	int			fd;
 	char		*buf;
 
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-	{
-		perror("cd");
-		return (1);
-	}
-	fstat(fd, &info);
-	close(fd);
 	buf = malloc(1024);
 	if (!buf)
 		return (1);
-	if (go_to_dir(info, argv, buf))
+	if (go_to_dir(argv, buf) == -1)
 		return (1);
 	return (0);
 }
