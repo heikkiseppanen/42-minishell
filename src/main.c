@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/18 22:54:48 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/19 19:18:40 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,6 @@ int	main(void)
 	}
 	shell_repl(&term);
 	write(1, "exit\n", 5);
-	exit (1);
+	exit (g_state.pipeline_err);
 	return (0);
 }

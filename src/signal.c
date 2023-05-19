@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:29:23 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/18 19:59:20 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/19 19:25:36 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	return_prompt(int signum)
 	ioctl(STDIN_FILENO, TIOCSTI, "\n");
 	rl_replace_line("", 0);
 	rl_on_new_line();
+	g_state.pipeline_err = 1;
 }
 
 void	set_doc(int signum)
