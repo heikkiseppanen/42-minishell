@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:39:41 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/18 22:26:41 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/19 19:32:05 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static t_main	get_sub_process(const char *arg0)
 		{"pwd", put_cwd},
 		{"env", put_env},
 		{"export", export_var},
+		{"exit", exit_cmd},
 		{"unset", unset_var}};
 	static t_htelem		*pointers[] = {
 		&elements[0],
@@ -33,8 +34,9 @@ static t_main	get_sub_process(const char *arg0)
 		&elements[2],
 		&elements[3],
 		&elements[4],
-		&elements[5]};
-	static t_htable		table = {pointers, 6, 6};
+		&elements[5],
+		&elements[6]};
+	static t_htable		table = {pointers, 7, 7};
 	if (!arg0)
 		return (NULL);
 	const t_main	executor = ft_htable_get(&table, arg0);
