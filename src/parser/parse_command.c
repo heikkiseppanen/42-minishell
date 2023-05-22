@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:47:14 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/22 18:05:39 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/22 18:07:50 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static void	clear_argv_buffer(t_buf *argv)
 
 	while (it != end && *it)
 	{
-		free(it);
+		free((void *)*it);
 		++it;
 	}
 	buf_del(argv);
