@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:59:25 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/11 11:14:06 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/22 12:02:26 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int	launch_executable(char **argv)
 
 	if (!environment || !argv)
 	{
+		ft_strarr_del(environment);
 		return (1);
 	}
 	argv[0] = expand_executable_path(argv[0]);
