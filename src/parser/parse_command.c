@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:47:14 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/22 18:07:50 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/22 19:18:33 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,10 @@ static void	clear_argv_buffer(t_buf *argv)
 
 static void	clear_redir_buffer(t_buf *redir)
 {
-	redir_del(redir->data, redir->size);
+	if (!redir->size)
+		buf_del(redir);
+	else
+		redir_del(redir->data, redir->size);
 }
 
 t_ast_node	*parse_command(t_token **iterator)
