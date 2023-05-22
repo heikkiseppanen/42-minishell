@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 22:35:52 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/17 06:44:28 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/22 18:54:49 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,10 @@ int	handle_exp(t_sym_state *s_s, const char *string)
 	if (!e_s.env)
 		return (0);
 	if (string[s_s->i] == '?' || !string[s_s->i] || !ft_isalpha(string[s_s->i]))
+	{
+		free(e_s.env);
 		return (check_first_tok(s_s, &e_s, string));
+	}
 	check_underscore(s_s, &e_s, string);
 	grab_env_str(s_s, &e_s, string);
 	e_s.envres = ft_htable_get(g_state.envp, e_s.env);
