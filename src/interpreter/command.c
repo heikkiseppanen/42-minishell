@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:39:41 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/16 03:50:21 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/22 12:01:40 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ static t_main	get_sub_process(const char *arg0)
 		{"unset", unset_var}};
 	static t_htelem		*pointers[] = {
 		&elements[0],
-		&elements[1],
-		&elements[2],
 		&elements[3],
 		&elements[4],
 		&elements[5]};
@@ -67,28 +65,44 @@ static int	execute_locally(t_main process, char **argv, t_ast_node *redir)
 	return (exit_status);
 }
 
-pid_t	launch_command(t_ast_node *command, t_pipe *in, t_pipe *out)
+static pid_t	create_fork(t_pipe *in, t_pipe *out, t_ast_node *redir)
 {
 	const pid_t	process = fork();
-	char		**argv;
 
 	if (process == -1)
 	{
-		perror("Failed to fork process");
+		perror("minishell: Failed to fork");
 	}
-	else if (process == 0)
+	if (process == 0)
 	{
 		if (in != NULL)
 			pipe_connect(in->read, STDIN_FILENO, in->write);
 		if (out != NULL)
 			pipe_connect(out->write, STDOUT_FILENO, out->read);
+		perform_redirections(redir);
+	}
+	return (process);
+}
+
+pid_t	launch_command(t_ast_node *command, t_pipe *in, t_pipe *out)
+{
+	const pid_t	process = create_fork(in, out, ast_right(command));
+	char		**argv;
+	t_main		sub_process;
+
+	if (process == 0)
+	{
 		argv = expand_arglist(ast_left(command)->data.args.argv);
 		if (!argv)
 		{
-			exit(1);
+			exit (1);
 		}
-		perform_redirections(ast_right(command));
-		exit(get_sub_process(argv[0])(argv));
+		sub_process = get_sub_process(argv[0]);
+		if (!sub_process)
+		{
+			exit (1);
+		}
+		exit(sub_process(argv));
 	}
 	return (process);
 }
@@ -101,16 +115,14 @@ int	execute_command(t_ast_node *command)
 	int				exit_status;
 
 	if (!argv)
-		return (0);
-	sub_process = get_sub_process(argv[0]);
+		sub_process = launch_executable;
+	else
+		sub_process = get_sub_process(argv[0]);
 	if (sub_process == launch_executable)
 	{
-		process = fork();
-		if (process == -1)
-			return (1);
+		process = create_fork(NULL, NULL, ast_right(command));
 		if (process == 0)
 		{
-			perform_redirections(ast_right(command));
 			exit(sub_process(argv));
 		}
 		waitpid(process, &exit_status, 0);
