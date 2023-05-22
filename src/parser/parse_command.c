@@ -6,13 +6,14 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:47:14 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/12 13:49:32 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/22 17:16:02 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 
 #include "typedef.h"
+#include "redir.h"
 
 static t_ast_node	*create_args_node(t_buf *argv)
 {
@@ -70,6 +71,23 @@ static t_ast_node	*create_redir_node(t_buf *redir)
 	return (redirections);
 }
 
+static void	clear_argv_buffer(t_buf *argv)
+{
+	char **const	it = argv->data;
+	char **const	end = it + argv->size;
+
+	while (it != end && *it)
+	{
+		free(it);
+	}
+	buf_del(argv);
+}
+
+static void	clear_redir_buffer(t_buf *redir)
+{
+	redir_del(redir->data, redir->size);
+}
+
 t_ast_node	*parse_command(t_token **iterator)
 {
 	t_buf			argv;
@@ -81,8 +99,8 @@ t_ast_node	*parse_command(t_token **iterator)
 			& buf_init(&redir, AST_INITIAL_ARGC, sizeof(t_redir)))
 		|| !parse_parameters(iterator, &argv, &redir))
 	{
-		buf_del(&argv);
-		buf_del(&redir);
+		clear_argv_buffer(&argv);
+		clear_redir_buffer(&redir);
 		return (NULL);
 	}
 	node_data.left = create_args_node(&argv);
