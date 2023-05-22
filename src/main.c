@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/19 19:18:40 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/22 22:06:34 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,8 @@ void	shell_repl(struct termios *term)
 		if (!input)
 			break ;
 		handle_input(input);
-		add_history(input);
+		if (ft_strncmp("", input, 1))
+			add_history(input);
 		free(input);
 	}
 }
