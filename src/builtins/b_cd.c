@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:07:10 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/18 22:27:12 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/22 19:22:32 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@
 
 extern t_shell_state	g_state;
 
-int	error_return(char *buf)
+static int	error_return(char *buf, char *old_pwd)
 {
+	if (old_pwd)
+		free(old_pwd);
 	if (buf)
 		free(buf);
 	perror("minishell: cd");
@@ -35,14 +37,14 @@ int	go_to_dir(char **argv, char *buf)
 
 	old_pwd = ft_htable_get(g_state.envp, "PWD");
 	if (!old_pwd)
-		return (error_return(buf));
+		return (error_return(buf, NULL));
 	old_pwd = ft_strdup(ft_htable_get(g_state.envp, "PWD"));
 	if (!old_pwd)
-		return (error_return(buf));
+		return (error_return(buf, old_pwd));
 	if (!opendir(argv[1]))
-		return (error_return(buf));
+		return (error_return(buf, old_pwd));
 	if (chdir(argv[1]) != 0)
-		return (error_return(buf));
+		return (error_return(buf, old_pwd));
 	getcwd(buf, 1024);
 	ft_htable_insert(g_state.envp, "PWD", buf);
 	ft_htable_insert(g_state.envp, "OLDPWD", old_pwd);
