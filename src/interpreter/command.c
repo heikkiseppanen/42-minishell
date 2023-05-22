@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:39:41 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/22 12:40:07 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/22 13:41:40 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,9 @@ int	execute_command(t_ast_node *command)
 	}
 	else
 	{
-		return(execute_locally(sub_process, argv, ast_right(command)));
+		exit_status = execute_locally(sub_process, argv, ast_right(command));
+		ft_strarr_del(argv);
+		return(exit_status);
 	}
 	ft_strarr_del(argv);
 	if (WIFSIGNALED(exit_status))
