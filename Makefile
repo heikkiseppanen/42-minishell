@@ -54,6 +54,7 @@ BUILTIN_SRC:=\
 	b_export.c\
 	b_pwd.c\
 	b_unset.c\
+	b_exit.c\
 
 SRC :=\
 	main.c\
