@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:47:14 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/22 17:16:02 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/22 18:05:39 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,13 @@ static t_ast_node	*create_redir_node(t_buf *redir)
 
 static void	clear_argv_buffer(t_buf *argv)
 {
-	char **const	it = argv->data;
-	char **const	end = it + argv->size;
+	const char	**it = argv->data;
+	const char	**end = it + argv->size;
 
 	while (it != end && *it)
 	{
 		free(it);
+		++it;
 	}
 	buf_del(argv);
 }
