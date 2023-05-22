@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 11:14:31 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/10 12:03:11 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/22 08:58:28 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 typedef enum e_redir_op
 {
+	REDIR_NULL,
 	REDIR_OUT_APPEND,
 	REDIR_OUT_TRUNC,
 	REDIR_IN_FILE,
