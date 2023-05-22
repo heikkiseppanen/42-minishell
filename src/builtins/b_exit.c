@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 18:51:54 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/19 20:30:03 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/22 16:09:50 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ int	exit_cmd(char	**argv)
 			write(2, err_argmax, ft_strlen(err_argmax));
 			return (1);
 		}
-		exit (0);
+		exit (exit_status);
 	}
 	else
-		exit(0);
+		exit(g_state.pipeline_err);
 	return (0);
 }
