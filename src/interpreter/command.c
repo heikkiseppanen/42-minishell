@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:39:41 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/22 12:01:40 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/22 12:20:59 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ static t_main	get_sub_process(const char *arg0)
 		{"unset", unset_var}};
 	static t_htelem		*pointers[] = {
 		&elements[0],
+		&elements[1],
+		&elements[2],
 		&elements[3],
 		&elements[4],
 		&elements[5]};
