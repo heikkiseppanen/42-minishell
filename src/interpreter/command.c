@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:39:41 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/22 12:20:59 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/22 13:41:40 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "builtins.h"
 #include "expand.h"
 #include "sys/wait.h"
-
+#include "sig.h"
 #include <stdio.h>
 
 static t_main	get_sub_process(const char *arg0)
@@ -26,6 +26,7 @@ static t_main	get_sub_process(const char *arg0)
 		{"pwd", put_cwd},
 		{"env", put_env},
 		{"export", export_var},
+		{"exit", exit_cmd},
 		{"unset", unset_var}};
 	static t_htelem		*pointers[] = {
 		&elements[0],
@@ -33,8 +34,9 @@ static t_main	get_sub_process(const char *arg0)
 		&elements[2],
 		&elements[3],
 		&elements[4],
-		&elements[5]};
-	static t_htable		table = {pointers, 6, 6};
+		&elements[5],
+		&elements[6]};
+	static t_htable		table = {pointers, 7, 7};
 	if (!arg0)
 		return (NULL);
 	const t_main	executor = ft_htable_get(&table, arg0);
@@ -53,6 +55,7 @@ static int	execute_locally(t_main process, char **argv, t_ast_node *redir)
 	const int	std_err = dup(STDERR_FILENO);
 	int	exit_status;
 
+	dfl_handler();
 	exit_status = 0;
 	if (perform_redirections(redir) == MS_SUCCESS)
 	{
@@ -69,6 +72,7 @@ static int	execute_locally(t_main process, char **argv, t_ast_node *redir)
 
 static pid_t	create_fork(t_pipe *in, t_pipe *out, t_ast_node *redir)
 {
+	ign_handler();
 	const pid_t	process = fork();
 
 	if (process == -1)
@@ -77,6 +81,7 @@ static pid_t	create_fork(t_pipe *in, t_pipe *out, t_ast_node *redir)
 	}
 	if (process == 0)
 	{
+		dfl_handler();
 		if (in != NULL)
 			pipe_connect(in->read, STDIN_FILENO, in->write);
 		if (out != NULL)
@@ -122,9 +127,11 @@ int	execute_command(t_ast_node *command)
 		sub_process = get_sub_process(argv[0]);
 	if (sub_process == launch_executable)
 	{
+		ign_handler();
 		process = create_fork(NULL, NULL, ast_right(command));
 		if (process == 0)
 		{
+			dfl_handler();
 			exit(sub_process(argv));
 		}
 		waitpid(process, &exit_status, 0);
@@ -132,7 +139,14 @@ int	execute_command(t_ast_node *command)
 	else
 	{
 		exit_status = execute_locally(sub_process, argv, ast_right(command));
+		ft_strarr_del(argv);
+		return(exit_status);
 	}
 	ft_strarr_del(argv);
+	if (WIFSIGNALED(exit_status))
+	{
+		write(1, "\n", 1);
+		return (WTERMSIG(exit_status) + 128);
+	}
 	return (WEXITSTATUS(exit_status));
 }

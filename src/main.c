@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/11 20:08:08 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/22 22:06:34 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ static int	increment_shlvl()
 	int				shlvl;
 
 	tmp = ft_htable_get(g_state.envp, "SHLVL");
+	if (!tmp)
+	{
+		ft_htable_insert(g_state.envp, "SHLVL", ft_itoa(1));
+		return (1);
+	}
 	shlvl = ft_atoi(tmp);
 	if (ft_htable_remove(g_state.envp, "SHLVL") == -1)
 		return (0);
@@ -120,6 +125,7 @@ void	shell_repl(struct termios *term)
 	tcgetattr(STDIN_FILENO, term);
 	while (1)
 	{
+		init_sighandler();
 		term->c_lflag &= ~ECHOCTL;
         tcsetattr(0, TCSANOW, term);
         input = readline("> ");
@@ -128,7 +134,8 @@ void	shell_repl(struct termios *term)
 		if (!input)
 			break ;
 		handle_input(input);
-		add_history(input);
+		if (ft_strncmp("", input, 1))
+			add_history(input);
 		free(input);
 	}
 }
@@ -139,15 +146,14 @@ int	main(void)
 
 	tcgetattr(STDIN_FILENO, &term);
 	g_state.envp = grab_environment_variables();
+	g_state.heredoc_done = 0;
 	if (!increment_shlvl())
 	{
 		perror("Failed to increment shell level");
 		exit (1);
 	}
-	rl_bind_key('\t', rl_complete);
-	using_history();
-	init_sighandler();
 	shell_repl(&term);
 	write(1, "exit\n", 5);
+	exit (g_state.pipeline_err);
 	return (0);
 }

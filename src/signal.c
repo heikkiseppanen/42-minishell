@@ -6,32 +6,58 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:29:23 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/13 04:29:37 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/19 19:25:36 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sig.h"
+#include "minishell.h"
 #include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
 
-void	return_prompt(void)
+extern t_shell_state g_state;
+
+void	return_prompt(int signum)
 {
+	(void)signum;
+	ioctl(STDIN_FILENO, TIOCSTI, "\n");
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	g_state.pipeline_err = 1;
+}
+
+void	set_doc(int signum)
+{
+	(void)signum;
+	g_state.heredoc_done = 1;
 	ioctl(STDIN_FILENO, TIOCSTI, "\n");
 	rl_replace_line("", 0);
 	rl_on_new_line();
 }
 
-void	sig_handler(int signum)
-{
-	if (signum == SIGINT)
-		return_prompt();
-}
-
 void	init_sighandler(void)
 {
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, sig_handler);
+	signal(SIGINT, return_prompt);
+}
+
+void	dfl_handler(void)
+{
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
+}
+
+void	ign_handler(void)
+{
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, SIG_IGN);
+}
+
+void	doc_handler(void)
+{
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, set_doc);
 }

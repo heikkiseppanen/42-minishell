@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:07:10 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/17 08:37:28 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/23 17:16:16 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,59 +15,76 @@
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <dirent.h>
 #include "libft.h"
 #include "minishell.h"
 
 extern t_shell_state	g_state;
 
-int	error_return(char *s1, char *s2)
+static int	error_return(char *old_pwd)
 {
-	if (s1)
-		free(s1);
-	if (s2)
-		free(s2);
-	perror("cd");
+	if (old_pwd)
+		free(old_pwd);
+	perror("minishell: cd");
 	return (1);
 }
 
-int	go_to_dir(struct stat info, char **argv, char *buf)
+static char	*get_pwd(void)
 {
-	char	*old_pwd;
+	char	*pwd;
+	char	*tmp;
+	char	buf[1025];
 
-	old_pwd = ft_strdup(ft_htable_get(g_state.envp, "PWD"));
-	if (!old_pwd)
-		return (error_return(buf, NULL));
-	if (S_ISDIR(info.st_mode))
+	pwd = ft_htable_get(g_state.envp, "PWD");
+	if (!pwd)
 	{
-		if (chdir(argv[1]) != 0)
-			return (error_return(buf, NULL));
 		getcwd(buf, 1024);
-		ft_htable_insert(g_state.envp, "PWD", buf);
-		ft_htable_insert(g_state.envp, "OLDPWD", old_pwd);
+		tmp = ft_strdup(buf);
+		if (!tmp)
+			return (NULL);
+		ft_htable_insert(g_state.envp, "PWD", tmp);
+		pwd = ft_htable_get(g_state.envp, "PWD");
 	}
-	else
-		return (error_return(buf, old_pwd));
-	return (0);
+	return (pwd);
 }
 
-int	change_directory(char	**argv)
+static int	go_home(void)
 {
-	struct stat	info;
-	int			fd;
-	char		*buf;
-
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
+	if (!ft_htable_get(g_state.envp, "HOME"))
 	{
-		perror("cd");
-		return (1);
+		ft_fprintf(2, "minishell: cd: HOME not set");
+		return (0);
 	}
-	fstat(fd, &info);
-	close(fd);
-	buf = malloc(1024);
-	if (!buf)
-		return (1);
-	if (go_to_dir(info, argv, buf))
-		return (1);
+	if (chdir(ft_htable_get(g_state.envp, "HOME")) != 0)
+		return (0);
+	return (1);
+}
+
+int	change_directory(char **argv)
+{
+	DIR		*t_dir;
+	char	buf[1025];
+	char	*old_pwd;
+
+	old_pwd = get_pwd();
+	if (!old_pwd)
+		return (error_return(NULL));
+	if (!argv[1])
+	{
+		if (!go_home())
+			return (error_return(NULL));
+	}
+	else
+	{
+		t_dir = opendir(argv[1]);
+		if (!t_dir)
+			return (error_return(NULL));
+		if (chdir(argv[1]) != 0)
+			return (error_return(old_pwd));
+		closedir(t_dir);
+	}
+	getcwd(buf, 1024);
+	ft_htable_insert(g_state.envp, "OLDPWD", ft_strdup(old_pwd));
+	ft_htable_insert(g_state.envp, "PWD", ft_strdup(buf));
 	return (0);
 }
