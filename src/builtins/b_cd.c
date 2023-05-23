@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:07:10 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/22 21:56:17 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/23 17:16:16 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static char	*get_pwd(void)
 	return (pwd);
 }
 
-static int	go_home()
+static int	go_home(void)
 {
 	if (!ft_htable_get(g_state.envp, "HOME"))
 	{
