@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:39:41 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/22 13:41:40 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:44:27 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int	execute_locally(t_main process, char **argv, t_ast_node *redir)
 	const int	std_err = dup(STDERR_FILENO);
 	int	exit_status;
 
-	dfl_handler();
+	register_handler(HANDLER_DFL);
 	exit_status = 0;
 	if (perform_redirections(redir) == MS_SUCCESS)
 	{
@@ -72,7 +72,7 @@ static int	execute_locally(t_main process, char **argv, t_ast_node *redir)
 
 static pid_t	create_fork(t_pipe *in, t_pipe *out, t_ast_node *redir)
 {
-	ign_handler();
+	register_handler(HANDLER_IGN);
 	const pid_t	process = fork();
 
 	if (process == -1)
@@ -81,7 +81,7 @@ static pid_t	create_fork(t_pipe *in, t_pipe *out, t_ast_node *redir)
 	}
 	if (process == 0)
 	{
-		dfl_handler();
+		register_handler(HANDLER_DFL);
 		if (in != NULL)
 			pipe_connect(in->read, STDIN_FILENO, in->write);
 		if (out != NULL)
@@ -127,11 +127,11 @@ int	execute_command(t_ast_node *command)
 		sub_process = get_sub_process(argv[0]);
 	if (sub_process == launch_executable)
 	{
-		ign_handler();
+		register_handler(HANDLER_IGN);
 		process = create_fork(NULL, NULL, ast_right(command));
 		if (process == 0)
 		{
-			dfl_handler();
+			register_handler(HANDLER_DFL);
 			exit(sub_process(argv));
 		}
 		waitpid(process, &exit_status, 0);

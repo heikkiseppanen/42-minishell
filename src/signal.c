@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:29:23 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/19 19:25:36 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:42:37 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,26 +38,26 @@ void	set_doc(int signum)
 	rl_on_new_line();
 }
 
-void	init_sighandler(void)
+void	register_handler(unsigned char regtype)
 {
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, return_prompt);
-}
-
-void	dfl_handler(void)
-{
-	signal(SIGQUIT, SIG_DFL);
-	signal(SIGINT, SIG_DFL);
-}
-
-void	ign_handler(void)
-{
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, SIG_IGN);
-}
-
-void	doc_handler(void)
-{
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, set_doc);
+	if (regtype == HANDLER_SH)
+	{
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, return_prompt);
+	}
+	if (regtype == HANDLER_DFL)
+	{
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
+	}
+	if (regtype == HANDLER_DOC)
+	{
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, set_doc);
+	}
+	if (regtype == HANDLER_IGN)
+	{
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, SIG_IGN);
+	}
 }
