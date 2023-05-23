@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:09:17 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/23 17:24:14 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/23 17:26:31 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ int	export_var(char **argv)
 	char	*value;
 	int		cur_arg;
 
-	cur_arg = 1;
-	if (!argv[cur_arg])
+	cur_arg = 0;
+	if (!argv[1])
 		put_exp();
 	while (argv[cur_arg++])
 	{
