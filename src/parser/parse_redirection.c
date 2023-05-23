@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 09:12:17 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/18 21:42:25 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:46:48 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static char	*read_here_doc(const char *eof, size_t size)
 	struct termios  term;
 
 	tcgetattr(STDIN_FILENO, &term);
-	doc_handler();
+	register_handler(HANDLER_DOC);
 	if (!buf_init(&here_doc, 16, sizeof(*line)))
 		return (NULL);
 	while (1)
@@ -41,6 +41,7 @@ static char	*read_here_doc(const char *eof, size_t size)
 			if (!buf_pushback(&here_doc, "\0", 1) || g_state.heredoc_done)
 			{
 				g_state.heredoc_done = 0;
+				g_state.pipeline_err = 1;
 				break ;
 			}
 			term.c_lflag |= ECHOCTL;

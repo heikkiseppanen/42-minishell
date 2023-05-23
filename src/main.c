@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/22 22:06:34 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:44:47 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void	shell_repl(struct termios *term)
 	tcgetattr(STDIN_FILENO, term);
 	while (1)
 	{
-		init_sighandler();
+		register_handler(HANDLER_SH);
 		term->c_lflag &= ~ECHOCTL;
         tcsetattr(0, TCSANOW, term);
         input = readline("> ");
