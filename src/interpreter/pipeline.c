@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 11:50:23 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/18 22:56:31 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/24 12:24:02 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,21 @@ static e_err	pipe_cmd(t_ast_node *cmd, t_pipe *in, t_pipe *out, t_buf *pid)
 		return (MS_FAIL);
 	}
 	return (MS_SUCCESS);
+}
+
+static int	wait_pipeline(t_buf *processes)
+{
+	const pid_t	*proc_it = processes->data;
+	const pid_t	*proc_end = proc_it + processes->size;
+	int			exit_status;
+
+	exit_status = 0;
+	while (proc_it != proc_end)
+	{
+		waitpid(*proc_it, &exit_status, 0);
+		++proc_it;
+	}
+	return (WEXITSTATUS(exit_status));
 }
 
 e_err	launch_pipeline(t_ast_node *pipe, t_pipe *input, t_buf *pid_out)
@@ -55,8 +70,6 @@ e_err	launch_pipeline(t_ast_node *pipe, t_pipe *input, t_buf *pid_out)
 	return (status);
 }
 
-#include <stdio.h>
-
 int	execute_pipeline(t_ast_node *pipeline_start)
 {
 	t_buf	processes;
@@ -68,15 +81,7 @@ int	execute_pipeline(t_ast_node *pipeline_start)
 		buf_del(&processes);
 		return (MS_FAIL);
 	}
-
-	pid_t *proc_it = processes.data;
-	pid_t *proc_end = proc_it + processes.size;
-	exit_status = 0;
-	while (proc_it != proc_end)
-	{
-		waitpid(*proc_it, &exit_status, 0);
-		++proc_it;
-	}
+	exit_status = wait_pipeline(&processes);
 	buf_del(&processes);
-	return (WEXITSTATUS(exit_status));
+	return (exit_status);
 }

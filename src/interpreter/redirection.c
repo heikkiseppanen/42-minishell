@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 09:54:05 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/17 10:13:59 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/24 10:43:49 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void	redir_arg_expand(t_redir *redir)
 
 e_err	perform_redirections(t_ast_node *redirections)
 {
-	const t_redir 	*it = redirections->data.redir.array;
-	const t_redir 	*end = it + redirections->data.redir.size;
+	const t_redir	*it = redirections->data.redir.array;
+	const t_redir	*end = it + redirections->data.redir.size;
 	e_err			status;
 
 	if (redirections->type != AST_REDIR)
