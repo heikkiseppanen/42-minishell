@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:39:41 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/24 12:23:41 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/24 13:37:47 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static t_main	get_sub_process(char **argv)
 	static t_htable	table = {pointers, 7, 7};
 	t_main			executor;
 
-	if (!argv)
+	if (!argv || !*argv)
 		return (NULL);
 	executor = ft_htable_get(&table, argv[0]);
 	if (!executor)
@@ -57,7 +57,14 @@ static int	execute_locally(t_main process, char **argv, t_ast_node *redir)
 	exit_status = 0;
 	if (perform_redirections(redir) == MS_SUCCESS)
 	{
-		exit_status = process(argv);
+		if (argv && *argv)
+		{
+			exit_status = process(argv);
+		}
+	}
+	else
+	{
+		exit_status = 1;
 	}
 	dup2(std_in, STDIN_FILENO);
 	dup2(std_out, STDOUT_FILENO);
@@ -99,10 +106,6 @@ pid_t	launch_command(t_ast_node *command, t_pipe *in, t_pipe *out)
 	if (process == 0)
 	{
 		argv = expand_arglist(ast_left(command)->data.args.argv);
-		if (!argv)
-		{
-			exit (1);
-		}
 		sub_process = get_sub_process(argv);
 		exit(sub_process(argv));
 	}

@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 11:50:23 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/24 12:24:02 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/24 17:29:19 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,11 @@ static int	wait_pipeline(t_buf *processes)
 	{
 		waitpid(*proc_it, &exit_status, 0);
 		++proc_it;
+	}
+	if (WIFSIGNALED(exit_status))
+	{
+		write(1, "\n", 1);
+		return (WTERMSIG(exit_status) + 128);
 	}
 	return (WEXITSTATUS(exit_status));
 }
@@ -79,7 +84,7 @@ int	execute_pipeline(t_ast_node *pipeline_start)
 		|| launch_pipeline(pipeline_start, NULL, &processes) == MS_FAIL)
 	{
 		buf_del(&processes);
-		return (MS_FAIL);
+		return (1);
 	}
 	exit_status = wait_pipeline(&processes);
 	buf_del(&processes);
