@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 10:32:27 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 19:50:33 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/29 09:52:52 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 
 t_ast_node	*ast_node_new(e_ast_node_type type, u_ast_data data)
 {
-	t_ast_node	*const empty = malloc(sizeof(*empty));
-	
+	t_ast_node *const	empty = malloc(sizeof(*empty));
+
 	empty->type = type;
 	empty->data = data;
 	return (empty);
@@ -57,64 +57,4 @@ t_ast_node	*ast_right(t_ast_node *node)
 		return (NULL);
 	}
 	return (node->data.branch.right);
-}
-
-void	ast_print(t_ast_node *node, int depth)
-{
-	int i;
-
-	i = 0;
-	while (i++ < depth)
-		ft_printf(" ");
-	++depth;
-	if (!node)
-		ft_printf("NULL\n");
-	else if (node->type == AST_PIPE)
-	{
-		ft_printf("PIPE\n");
-		ast_print(node->data.branch.left, depth + 1);
-		ast_print(node->data.branch.right, depth + 1);
-	}
-	else if (node->type == AST_COMMAND)
-	{
-		ft_printf("COMMAND\n");
-		ast_print(node->data.branch.left, depth + 1);
-		ast_print(node->data.branch.right, depth + 1);
-	}
-	else if (node->type == AST_ARGS)
-	{
-		ft_printf("ARGS %d\n", node->data.args.argc);
-		char **it = node->data.args.argv;
-		while (*it)
-		{
-			i = 0;
-			while (i++ < depth)
-				ft_printf(" ");
-			ft_printf("\"%s\"\n", *it);
-			++it;
-		}
-	}
-	else if (node->type == AST_REDIR)
-	{
-		ft_printf("REDIR %d\n", node->data.redir.size);
-		t_redir *it = node->data.redir.array;
-		t_redir *end = it + node->data.redir.size;
-		while (it != end)
-		{
-			i = 0;
-			while (i++ < depth)
-				ft_printf(" ");
-			if (it->operation == REDIR_OUT_TRUNC)
-				ft_printf("REDIR_OUT_TRUNC %d \"%s\"\n", it->file_descriptor, it->argument);
-			else if (it->operation == REDIR_OUT_APPEND)
-				ft_printf("REDIR_OUT_APPEND %d \"%s\"\n", it->file_descriptor, it->argument);
-			else if (it->operation == REDIR_IN_FILE)
-				ft_printf("REDIR_IN_FILE %d \"%s\"\n", it->file_descriptor, it->argument);
-			else if (it->operation == REDIR_IN_HEREDOC)
-				ft_printf("REDIR_IN_HEREDOC %d \"%s\"\n", it->file_descriptor, it->argument);
-			else
-				ft_printf("UNKNOWN");
-			++it;
-		}
-	}
 }

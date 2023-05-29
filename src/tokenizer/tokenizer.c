@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 13:11:24 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/07 14:34:30 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/29 10:01:22 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,21 @@
 static const t_token_def	*get_token_lookup_table(void)
 {
 	static const t_token_def	table[] = {
-		{'\0', TOK_NULL},
-		{'\n', TOK_NULL},
-		{'|', TOK_PIPE},
-		{'<', TOK_LESS},
-		{'>', TOK_GREAT},
-		{-1, TOK_UNKNOWN},
+	{'\0', TOK_NULL},
+	{'\n', TOK_NULL},
+	{'|', TOK_PIPE},
+	{'<', TOK_LESS},
+	{'>', TOK_GREAT},
+	{-1, TOK_UNKNOWN},
 	};
+
 	return (table);
 }
 
 static t_token	parse_word_token(const char *begin)
 {
-	const char *it = begin;
-	const char *pair;
+	const char	*it = begin;
+	const char	*pair;
 
 	while (!char_is_meta(*it))
 	{
