@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 12:10:16 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/17 07:10:44 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/29 11:23:53 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static int	open_here_doc(const char *here_doc)
 	return (file.read);
 }
 
-e_err	redir_execute(const t_redir *redir)
+t_err	redir_execute(const t_redir *redir)
 {
 	int	file;
 

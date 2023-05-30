@@ -6,10 +6,6 @@ SRCDIR := ./src
 OBJDIR := ./obj
 INCDIR := $(SRCDIR)/include
 
-AST_DIR := ast
-AST_SRC :=\
-	ast.c\
-
 TOKENIZER_DIR := tokenizer
 TOKENIZER_SRC :=\
 	tokenizer.c\
@@ -19,7 +15,9 @@ TOKENIZER_SRC :=\
 
 PARSER_DIR := parser
 PARSER_SRC :=\
+	ast.c\
 	unexpect.c\
+	heredoc.c\
 	parse_pipeline.c\
 	parse_command.c\
 	parse_parameters.c\

@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:49:46 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/12 13:47:32 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/30 14:52:08 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ t_ast_node	*parse_pipeline(t_token **iterator)
 		ast_node_del(node_data.left);
 		return (NULL);
 	}
-	pipe = ast_node_new(AST_PIPE, (u_ast_data)node_data);
+	pipe = ast_node_new(AST_PIPE, (t_ast_data)node_data);
 	if (!pipe)
 	{
-		ast_node_del(pipe->data.branch.left);
-		ast_node_del(pipe->data.branch.right);
+		ast_node_del(node_data.left);
+		ast_node_del(node_data.right);
 	}
 	return (pipe);
 }

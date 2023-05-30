@@ -6,12 +6,13 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:29:23 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/23 19:42:37 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/29 09:55:43 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sig.h"
 #include "minishell.h"
+#include <stdio.h>
 #include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>

@@ -6,56 +6,13 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 09:12:17 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/23 19:46:48 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/30 09:27:12 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 #include "minishell.h"
-#include <stdio.h>
-#include <readline/readline.h>
 #include "sig.h"
-#include <termios.h>
-
-extern t_shell_state g_state;
-
-static char	*read_here_doc(const char *eof, size_t size)
-{
-	t_buf	here_doc;
-	char	*line;
-	struct termios  term;
-
-	tcgetattr(STDIN_FILENO, &term);
-	register_handler(HANDLER_DOC);
-	if (!buf_init(&here_doc, 16, sizeof(*line)))
-		return (NULL);
-	while (1)
-	{
-		term.c_lflag &= ~ECHOCTL;
-        tcsetattr(0, TCSANOW, &term);
-		line = readline("> ");
-		if (!line || ft_memcmp(line, eof, size) == 0 || g_state.heredoc_done)
-		{
-			if (line)
-				free(line);
-			if (!buf_pushback(&here_doc, "\0", 1) || g_state.heredoc_done)
-			{
-				g_state.heredoc_done = 0;
-				g_state.pipeline_err = 1;
-				break ;
-			}
-			term.c_lflag |= ECHOCTL;
-			tcsetattr(0, TCSANOW, &term);
-			return (here_doc.data);
-		}
-		if (!buf_pushback(&here_doc, line, ft_strlen(line))
-			|| !buf_pushback(&here_doc, "\n", 1))
-			break ;
-		free(line);
-	}
-	buf_del(&here_doc);
-	return (NULL);
-}
 
 static const char	*parse_redirection_argument(t_token **iterator)
 {
@@ -71,9 +28,9 @@ static const char	*parse_redirection_argument(t_token **iterator)
 	return (argument);
 }
 
-static e_redir_op	parse_redirection_operation(t_token **iterator)
+static t_redir_op	parse_redirection_operation(t_token **iterator)
 {
-	e_redir_op	operation;
+	t_redir_op	operation;
 
 	operation = 0;
 	if (token_is(*iterator, TOK_GREAT))
@@ -119,7 +76,7 @@ static int	parse_redirection_target(t_token **iterator)
 	return (-1);
 }
 
-e_err	parse_redirection(t_token **iterator, t_buf *redir_out)
+t_err	parse_redirection(t_token **iterator, t_buf *redir_out)
 {
 	t_redir	rd;
 
@@ -131,7 +88,7 @@ e_err	parse_redirection(t_token **iterator, t_buf *redir_out)
 	}
 	if (rd.operation == REDIR_IN_HEREDOC)
 	{
-		rd.argument = read_here_doc((*iterator)->begin, (*iterator)->size);
+		rd.argument = read_heredoc((*iterator)->begin, (*iterator)->size);
 		*iterator += 1;
 	}
 	else

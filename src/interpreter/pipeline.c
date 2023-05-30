@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 11:50:23 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/18 22:56:31 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/29 11:26:10 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 
-static e_err	pipe_cmd(t_ast_node *cmd, t_pipe *in, t_pipe *out, t_buf *pid)
+static t_err	pipe_cmd(t_ast_node *cmd, t_pipe *in, t_pipe *out, t_buf *pid)
 {
 	const pid_t	process = launch_command(cmd, in, out);
 
@@ -26,10 +26,30 @@ static e_err	pipe_cmd(t_ast_node *cmd, t_pipe *in, t_pipe *out, t_buf *pid)
 	return (MS_SUCCESS);
 }
 
-e_err	launch_pipeline(t_ast_node *pipe, t_pipe *input, t_buf *pid_out)
+static int	wait_pipeline(t_buf *processes)
+{
+	const pid_t	*proc_it = processes->data;
+	const pid_t	*proc_end = proc_it + processes->size;
+	int			exit_status;
+
+	exit_status = 0;
+	while (proc_it != proc_end)
+	{
+		waitpid(*proc_it, &exit_status, 0);
+		++proc_it;
+	}
+	if (WIFSIGNALED(exit_status))
+	{
+		write(1, "\n", 1);
+		return (WTERMSIG(exit_status) + 128);
+	}
+	return (WEXITSTATUS(exit_status));
+}
+
+t_err	launch_pipeline(t_ast_node *pipe, t_pipe *input, t_buf *pid_out)
 {
 	t_pipe	output;
-	e_err	status;
+	t_err	status;
 
 	pipe_init(&output);
 	if (pipe_cmd(ast_left(pipe), input, &output, pid_out) == MS_FAIL)
@@ -55,8 +75,6 @@ e_err	launch_pipeline(t_ast_node *pipe, t_pipe *input, t_buf *pid_out)
 	return (status);
 }
 
-#include <stdio.h>
-
 int	execute_pipeline(t_ast_node *pipeline_start)
 {
 	t_buf	processes;
@@ -66,17 +84,9 @@ int	execute_pipeline(t_ast_node *pipeline_start)
 		|| launch_pipeline(pipeline_start, NULL, &processes) == MS_FAIL)
 	{
 		buf_del(&processes);
-		return (MS_FAIL);
+		return (1);
 	}
-
-	pid_t *proc_it = processes.data;
-	pid_t *proc_end = proc_it + processes.size;
-	exit_status = 0;
-	while (proc_it != proc_end)
-	{
-		waitpid(*proc_it, &exit_status, 0);
-		++proc_it;
-	}
+	exit_status = wait_pipeline(&processes);
 	buf_del(&processes);
-	return (WEXITSTATUS(exit_status));
+	return (exit_status);
 }
