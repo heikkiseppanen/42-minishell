@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/23 19:44:47 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/30 09:03:38 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,12 +99,12 @@ char	**htable_to_environ(t_htable *envp)
 	return (env);
 }
 
-e_err	handle_input(const char *input)
+t_err	handle_input(const char *input)
 {
 	t_token	*const	tokenized_input = tokenize_string(input);
 	t_token		*token_iterator;
 	t_ast_node	*syntax_tree;
-	e_err		status;
+	t_err		status;
 
 	if (!tokenized_input)
 		return (MS_FAIL);
