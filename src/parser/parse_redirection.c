@@ -6,14 +6,13 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 09:12:17 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/29 14:45:35 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/30 09:27:12 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 #include "minishell.h"
 #include "sig.h"
-
 
 static const char	*parse_redirection_argument(t_token **iterator)
 {

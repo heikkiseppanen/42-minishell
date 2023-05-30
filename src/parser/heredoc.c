@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 10:12:55 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/29 15:59:34 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/30 09:26:10 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static t_err	read_heredoc_to_buf(const char *eof, size_t size, t_buf *out)
 	{
 		line = heredoc_readline("heredoc> ");
 		if (!line || g_state.heredoc_done)
-			break;
+			break ;
 		if (ft_memcmp(line, eof, size) != 0)
 		{
 			if (!buf_pushback(out, line, ft_strlen(line))

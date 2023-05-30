@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/30 09:03:38 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/30 09:23:59 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-extern char 	**environ;
 t_shell_state 	g_state;
 
 static int	increment_shlvl()
 {
+	extern char 	**environ;
 	char			*tmp;
 	int				shlvl;
 
@@ -46,6 +46,7 @@ static int	increment_shlvl()
 
 t_htable	*grab_environment_variables()
 {
+	extern char 	**environ;
 	t_htable		*envtable;
 	unsigned int	i;
 	unsigned int	j;
