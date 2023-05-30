@@ -26,7 +26,6 @@ t_shell_state 	g_state;
 
 static int	increment_shlvl()
 {
-	extern char 	**environ;
 	char			*tmp;
 	int				shlvl;
 
