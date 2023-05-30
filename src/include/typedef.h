@@ -6,23 +6,17 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 10:50:46 by hseppane          #+#    #+#             */
-/*   Updated: 2023/04/18 14:48:41 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/29 11:24:03 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TYPEDEF_H
 # define TYPEDEF_H
 
-typedef enum e_bool
-{
-	MS_FALSE = 0,
-	MS_TRUE = 1
-}	e_bool;
-
 typedef enum e_err
 {
 	MS_FAIL = 0,
 	MS_SUCCESS = 1,
-}	e_err;
+}	t_err;
 
 #endif

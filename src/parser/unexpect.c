@@ -6,13 +6,13 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:54:20 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/04 19:20:24 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/29 11:24:38 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 
-e_err	unexpect(const t_token *token)
+t_err	unexpect(const t_token *token)
 {
 	ft_fprintf(STDERR_FILENO, "minishell: syntax error near unexpected token ");
 	ft_putchar_fd('`', STDERR_FILENO);

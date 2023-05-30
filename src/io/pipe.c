@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:49:01 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/08 14:59:20 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/29 11:25:46 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-e_err	pipe_init(t_pipe *empty)
+t_err	pipe_init(t_pipe *empty)
 {
 	if (pipe((int *)empty) == -1)
 	{
@@ -27,7 +27,7 @@ e_err	pipe_init(t_pipe *empty)
 	return (MS_SUCCESS);
 }
 
-e_err	pipe_close(t_pipe *pipe)
+t_err	pipe_close(t_pipe *pipe)
 {
 	if (close(pipe->read) == -1)
 	{
@@ -42,12 +42,7 @@ e_err	pipe_close(t_pipe *pipe)
 	return (MS_SUCCESS);
 }
 
-e_bool	pipe_is_valid(t_pipe *pipe)
-{
-	return (pipe->read > 0 && pipe->write > 0);
-}
-
-e_err	pipe_connect(int source, int target, int unused)
+t_err	pipe_connect(int source, int target, int unused)
 {
 	if (dup2(source, target) == -1)
 	{

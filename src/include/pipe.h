@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 12:48:13 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/08 14:58:02 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/29 11:25:34 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,11 @@ typedef struct s_pipe
 {
 	int	read;
 	int	write;
-} t_pipe;
+}	t_pipe;
 
-e_err	pipe_init(t_pipe *empty);
-e_err	pipe_close(t_pipe *pipe);
+t_err	pipe_init(t_pipe *empty);
+t_err	pipe_close(t_pipe *pipe);
 
-e_bool	pipe_is_valid(t_pipe *pipe);
-e_err	pipe_connect(int source, int target, int unused);
+t_err	pipe_connect(int source, int target, int unused);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 10:32:27 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/29 09:52:52 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/29 10:06:16 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 #include <libft.h>
 
-t_ast_node	*ast_node_new(e_ast_node_type type, u_ast_data data)
+t_ast_node	*ast_node_new(t_ast_node_type type, t_ast_data data)
 {
 	t_ast_node *const	empty = malloc(sizeof(*empty));
 

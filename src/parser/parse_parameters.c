@@ -6,15 +6,15 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 10:00:33 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/12 13:55:05 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/29 11:23:03 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 
-e_err	parse_parameters(t_token **iterator, t_buf *argv_out, t_buf *redir_out)
+t_err	parse_parameters(t_token **iterator, t_buf *argv_out, t_buf *redir_out)
 {
-	e_token_type	redir_token;
+	t_token_type	redir_token;
 
 	redir_token = TOK_DLESS | TOK_LESS | TOK_DGREAT | TOK_GREAT | TOK_IO_DIGIT;
 	if (!token_is(*iterator, redir_token | TOK_WORD))

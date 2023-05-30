@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 13:58:38 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/24 10:43:30 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/29 11:25:53 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "minishell.h"
 #include "typedef.h"
 
-e_err	interpret_ast(t_ast_node *node)
+t_err	interpret_ast(t_ast_node *node)
 {
 	extern t_shell_state	g_state;
 

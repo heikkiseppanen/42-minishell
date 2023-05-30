@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/02 09:47:14 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/22 19:18:33 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/05/29 10:05:56 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static t_ast_node	*create_args_node(t_buf *argv)
 		node_data.argv = argv->data;
 		node_data.argv[node_data.argc] = NULL;
 	}
-	arguments = ast_node_new(AST_ARGS, (u_ast_data)node_data);
+	arguments = ast_node_new(AST_ARGS, (t_ast_data)node_data);
 	if (!arguments)
 	{
 		ft_strarr_del(node_data.argv);
@@ -63,7 +63,7 @@ static t_ast_node	*create_redir_node(t_buf *redir)
 		node_data.size = redir->size;
 		node_data.array = redir->data;
 	}
-	redirections = ast_node_new(AST_REDIR, (u_ast_data)node_data);
+	redirections = ast_node_new(AST_REDIR, (t_ast_data)node_data);
 	if (!redirections)
 	{
 		redir_del(node_data.array, node_data.size);
@@ -109,7 +109,7 @@ t_ast_node	*parse_command(t_token **iterator)
 	}
 	node_data.left = create_args_node(&argv);
 	node_data.right = create_redir_node(&redir);
-	command = ast_node_new(AST_COMMAND, (u_ast_data)node_data);
+	command = ast_node_new(AST_COMMAND, (t_ast_data)node_data);
 	if (!command)
 	{
 		ast_node_del(node_data.left);

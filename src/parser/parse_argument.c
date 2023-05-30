@@ -6,13 +6,13 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 11:48:21 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/12 11:48:34 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/29 11:23:11 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ast.h"
 
-e_err	parse_argument(t_token **iterator, t_buf *argv_out)
+t_err	parse_argument(t_token **iterator, t_buf *argv_out)
 {
 	const char	*argument;
 

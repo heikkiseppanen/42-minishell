@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 08:31:36 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/29 10:00:40 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/29 10:07:48 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 #include <libft.h>
 #include <stdio.h>
 
-t_token	token_new(e_token_type type, const char *begin, size_t size)
+t_token	token_new(t_token_type type, const char *begin, size_t size)
 {
 	return ((t_token){type, begin, size});
 }
 
-int	token_is(const t_token *token, e_token_type type_mask)
+int	token_is(const t_token *token, t_token_type type_mask)
 {
 	return (token->type & type_mask);
 }

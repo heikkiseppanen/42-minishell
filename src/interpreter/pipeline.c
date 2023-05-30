@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 11:50:23 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/24 17:29:19 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/05/29 11:26:10 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 
-static e_err	pipe_cmd(t_ast_node *cmd, t_pipe *in, t_pipe *out, t_buf *pid)
+static t_err	pipe_cmd(t_ast_node *cmd, t_pipe *in, t_pipe *out, t_buf *pid)
 {
 	const pid_t	process = launch_command(cmd, in, out);
 
@@ -46,10 +46,10 @@ static int	wait_pipeline(t_buf *processes)
 	return (WEXITSTATUS(exit_status));
 }
 
-e_err	launch_pipeline(t_ast_node *pipe, t_pipe *input, t_buf *pid_out)
+t_err	launch_pipeline(t_ast_node *pipe, t_pipe *input, t_buf *pid_out)
 {
 	t_pipe	output;
-	e_err	status;
+	t_err	status;
 
 	pipe_init(&output);
 	if (pipe_cmd(ast_left(pipe), input, &output, pid_out) == MS_FAIL)
