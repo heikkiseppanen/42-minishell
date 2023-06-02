@@ -54,6 +54,12 @@ BUILTIN_SRC:=\
 	b_unset.c\
 	b_exit.c\
 
+LEX_DIR := builtins/lex_sort
+LEX_SRC:=\
+		 sort.c\
+		 sort_helpers.c\
+		 sort_init.c\
+
 SRC :=\
 	main.c\
 	signal.c\
@@ -64,6 +70,7 @@ SRC :=\
 	$(IO_SRC:%=$(IO_DIR)/%)\
 	$(EXP_SRC:%=$(EXP_DIR)/%)\
 	$(BUILTIN_SRC:%=$(BUILTIN_DIR)/%)\
+	$(LEX_SRC:%=$(LEX_DIR)/%)\
 
 OBJ := $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 DEP := $(OBJ:%.o=%.d)
@@ -78,7 +85,7 @@ FT_LD := -L ./third-party/libft -lft
 
 CC := cc
 INCLUDE := -I $(FT_DIR) -I $(INCDIR)
-CFLAGS := -Wall -Werror -Wextra $(INCLUDE)
+CFLAGS := -g -Wall -Werror -Wextra $(INCLUDE)
 LDFLAGS := -L $(HOME)/.brew/Cellar/readline/8.2.1/lib -lreadline -lhistory $(FT_LD)
 
 # Rules
@@ -88,7 +95,7 @@ all: $(NAME)
 run: all
 	./$(NAME)
 
-debug: CFLAGS+= -g -fsanitize=address,undefined
+debug: CFLAGS+= -fsanitize=address,undefined
 debug: LDFLAGS+= -fsanitize=address,undefined
 debug: $(NAME)
 
