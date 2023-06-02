@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:09:17 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/02 17:35:33 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/02 17:58:51 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 #include "libft.h"
 #include "minishell.h"
 #include "export.h"
-#include <stddef.h>
-#include <unistd.h>
 
 static void	print_buf(t_buf *buf)
 {

@@ -6,14 +6,13 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/02 17:44:18 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/02 17:59:55 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
 #include "expand.h"
-#include <stddef.h>
 
 static void	open_quote(t_sym_state *s_s, const char *string)
 {
