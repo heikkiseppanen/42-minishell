@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 10:12:55 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/30 09:26:10 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/06/02 10:17:28 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,7 @@ static t_err	read_heredoc_to_buf(const char *eof, size_t size, t_buf *out)
 	while (1)
 	{
 		line = heredoc_readline("heredoc> ");
-		if (!line || g_state.heredoc_done)
-			break ;
-		if (ft_memcmp(line, eof, size) != 0)
+		if (line && ft_memcmp(line, eof, size) != 0 && !g_state.heredoc_done)
 		{
 			if (!buf_pushback(out, line, ft_strlen(line))
 				|| !buf_pushback(out, "\n", 1))
@@ -52,7 +50,8 @@ static t_err	read_heredoc_to_buf(const char *eof, size_t size, t_buf *out)
 		}
 		if (!buf_pushback(out, "\0", 1))
 			break ;
-		free(line);
+		if (line)
+			free(line);
 		return (MS_SUCCESS);
 	}
 	if (line)
