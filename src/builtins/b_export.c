@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:09:17 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/02 10:19:54 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/02 12:29:39 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,13 +123,18 @@ t_buf	*filter_cond(t_buf *b, size_t index, char smallest, size_t *pushed)
 		if (cur_str[index] == smallest)
 		{
 			if (!buf_pushback(filter_res, &cur_str, 1))
+			{
+				buf_del(b);
+				free(b);
 				return (NULL);
+			}
 			(*pushed)++;
 		}
 		i++;
 	}
 	buf_del(b);
 	free(b);
+	ft_printf("tfree: %p\n", b);
 	return (filter_res);
 }
 
@@ -143,7 +148,10 @@ t_buf	*remove_one_elem(t_buf *a, char *elem)
 
 	ret = malloc(sizeof(t_buf));
 	if (!buf_init(ret, a->cap - 1, sizeof(char *)))
+	{
+		free(ret);
 		return (NULL);
+	}
 	i = 0;
 	while (i < a->cap)
 	{
@@ -156,11 +164,17 @@ t_buf	*remove_one_elem(t_buf *a, char *elem)
 			if ((ft_strncmp(memory[i], elem, elemlen)))
 			{
 				if (!buf_pushback(ret, &memory[i], 1))
+				{
+					buf_del(ret);
+					free(ret);
 					return (NULL);
+				}
 			}
 		}
 		i++;
 	}
+	buf_del(a);
+	free(a);
 	return (ret);
 }
 
@@ -183,7 +197,11 @@ t_buf	*buf_copy(t_buf *a)
 			continue ;
 		}
 		if (!buf_pushback(copy, &memory[i], 1))
+		{
+			free(copy);
+			buf_del(copy);
 			return (NULL);
+		}
 		i++;
 	}
 	return (copy);
@@ -193,101 +211,126 @@ int	sort_bufs(t_buf *a, t_buf *b)
 {
 	t_buf	*t;
 	size_t	i;
-	size_t	b_iter;
 	size_t	pushed;
 	char	smallest;
 	char	**memory;
 
-	pushed = 0;
-	i = 0;
 	while (a->cap >= 1)
 	{
 		i = 0;
 		pushed = 0;
 		t = buf_copy(a);
+		ft_printf("tsort: %p\n", t);
+		if (!t)
+			return (0);
 		memory = (char **)t->data;
 		while (t->cap != 1)
 		{
 			smallest = get_smallest(t, i);
 			t = filter_cond(t, i, smallest, &pushed);
+			ft_printf("twhile: %p\n", t);
+			if (!t)
+				return (0);
 			memory = (char **)t->data;
 			i++;
 		}
 		if (a->cap != 1)
+		{
 			a = remove_one_elem(a, memory[0]);
+			if (!a)
+				return (0);
+		}
 		else
 			a->cap = 0;
 		if (!buf_pushback(b, &memory[0], 1))
+		{
+			buf_del(a);
+			buf_del(t);
+			free(a);
+			free(t);
 			return (0);
+		}
+		buf_del(t);
+		free(t);
+		ft_printf("tfree: %p\n", t);
 	}
-	b_iter = 0;
-	while (b_iter < b->cap)
-	{
-		memory = (char **)b->data;
-		if (memory[b_iter] && ft_memcmp(memory[b_iter], "_=", 2))
-				ft_printf("%s\n", memory[b_iter]);
-		b_iter++;
-	}
+	buf_del(a);
+	free(a);
 	return (1);
 }
 
 t_buf	*create_sorted_buf()
 {
 	t_buf	*a;
-	t_buf	*b;
+	t_buf	b;
+	t_buf	*sorted;
+	char	**environ;
 	int		len;
 
-	len = get_env_len();
 	a = malloc(sizeof(t_buf));
 	if (!a)
 		return (NULL);
-	b = malloc(sizeof(t_buf));
-	if (!b)
-	{
-		free(a);
+	environ = htable_to_environ(g_state.envp);
+	if (!environ)
 		return (NULL);
-	}
+	len = get_env_len();
 	buf_init(a, len, sizeof(char *));
-	buf_init(b, len, sizeof(char *));
-	if (!strarr_to_buf(htable_to_environ(g_state.envp), a))
+	buf_init(&b, len, sizeof(char *));
+	if (!strarr_to_buf(environ, a))
 	{
 		buf_del(a);
-		buf_del(b);
-		free(b);
+		buf_del(&b);
 		return (NULL);
 	}
-	if (!sort_bufs(a, b))
+	if (!sort_bufs(a, &b))
 	{
 		buf_del(a);
-		buf_del(b);
-		free(b);
+		buf_del(&b);
 		return (NULL);
 	}
-	return (b);
+	sorted = buf_copy(&b);
+	buf_del(&b);
+	if (!sorted)
+		return (NULL);
+	free(environ);
+	return (sorted);
+}
+
+void	print_buf(t_buf *buf)
+{
+	size_t	b_iter;
+	char	**memory;
+
+	b_iter = 0;
+	while (b_iter < buf->cap)
+	{
+		memory = (char **)buf->data;
+		if (memory[b_iter])
+				ft_printf("%s\n", memory[b_iter]);
+		b_iter++;
+	}
 }
 
 int	put_exp(void)
 {
+	t_buf	*sorted_buf;
+	char	**memory;
 	size_t	i;
-	char	*key;
-	char	*value;
 
+	sorted_buf = create_sorted_buf();
+	if (!sorted_buf)
+		return (1);
+	print_buf(sorted_buf);
+	memory = (char **)sorted_buf->data;
 	i = 0;
-	create_sorted_buf();
-	return (0);
-	while (i < g_state.envp->cap)
+	while (i < sorted_buf->cap)
 	{
-		if (g_state.envp->memory[i])
-		{
-			value = (char *)g_state.envp->memory[i]->value;
-			key = (char *)g_state.envp->memory[i]->key;
-			if (!(value))
-				ft_printf("%s\n", key);
-			else
-				ft_printf("%s=\"%s\"\n", key, value);
-		}
+		if (memory[i])
+			free(memory[i]);
 		i++;
 	}
+	buf_del(sorted_buf);
+	free(sorted_buf);
 	return (0);
 }
 
@@ -307,7 +350,7 @@ int	export_var(char **argv)
 
 	cur_arg = 0;
 	if (!argv[1])
-		put_exp();
+		return (put_exp());
 	while (argv[cur_arg++])
 	{
 		var_val = ft_split(argv[cur_arg], '=');
