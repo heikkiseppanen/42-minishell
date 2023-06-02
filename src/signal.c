@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 10:29:23 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/29 09:55:43 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/06/02 17:43:37 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 
-extern t_shell_state g_state;
-
 void	return_prompt(int signum)
 {
+	extern t_shell_state	g_state;
+
 	(void)signum;
 	ioctl(STDIN_FILENO, TIOCSTI, "\n");
 	rl_replace_line("", 0);
@@ -32,6 +32,8 @@ void	return_prompt(int signum)
 
 void	set_doc(int signum)
 {
+	extern t_shell_state	g_state;
+
 	(void)signum;
 	g_state.heredoc_done = 1;
 	ioctl(STDIN_FILENO, TIOCSTI, "\n");
