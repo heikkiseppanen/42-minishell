@@ -6,16 +6,13 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/17 06:59:49 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/02 17:59:55 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
 #include "expand.h"
-#include <stddef.h>
-
-extern t_shell_state	g_state;
 
 static void	open_quote(t_sym_state *s_s, const char *string)
 {
@@ -52,7 +49,7 @@ static int	process_tokenstream(t_sym_state *s_s, const char *string)
 			break ;
 		}
 		else if (!buf_pushback(s_s->buf, (void *)(&string[s_s->i]), 1))
-				return (0);
+			return (0);
 		s_s->i++;
 	}
 	return (1);
