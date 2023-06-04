@@ -56,8 +56,6 @@ static int	put_exp(void)
 	i = 0;
 	while (environ[i])
 		i++;
-	if (!environ)
-		return (1);
 	str_qsort((const char **)environ, 0, i - 1);
 	i = 0;
 	while (environ[i])
