@@ -54,12 +54,6 @@ BUILTIN_SRC:=\
 	b_unset.c\
 	b_exit.c\
 
-LEX_DIR := builtins/lex_sort
-LEX_SRC:=\
-		 sort.c\
-		 sort_helpers.c\
-		 sort_init.c\
-
 SRC :=\
 	main.c\
 	signal.c\
@@ -70,7 +64,6 @@ SRC :=\
 	$(IO_SRC:%=$(IO_DIR)/%)\
 	$(EXP_SRC:%=$(EXP_DIR)/%)\
 	$(BUILTIN_SRC:%=$(BUILTIN_DIR)/%)\
-	$(LEX_SRC:%=$(LEX_DIR)/%)\
 
 OBJ := $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 DEP := $(OBJ:%.o=%.d)
