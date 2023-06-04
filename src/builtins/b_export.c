@@ -10,53 +10,64 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/ft/buf.h"
 #include "libft.h"
 #include "minishell.h"
-#include "export.h"
 
-static void	print_buf(t_buf *buf)
+static size_t	partition(const char **arr, size_t lo, size_t hi)
 {
-	size_t	b_iter;
-	char	**memory;
+	const char		*pivot_value = arr[(hi - lo) / 2 + lo];
+	const size_t	pivot_len = ft_strlen(pivot_value);
+	const char		*tmp;
 
-	memory = (char **)buf->data;
-	b_iter = 0;
-	while (b_iter < buf->cap)
+	while (1)
 	{
-		if (memory[b_iter])
-			ft_printf("%s\n", memory[b_iter]);
-		b_iter++;
+		while (ft_strncmp(arr[lo], pivot_value, pivot_len) < 0)
+			++lo;
+		while (ft_strncmp(arr[hi], pivot_value, pivot_len) > 0)
+			--hi;
+		if (lo >= hi)
+			return (hi);
+		tmp = arr[hi];
+		arr[hi] = arr[lo];
+		arr[lo] = tmp;
 	}
+}
+
+static void	str_qsort(const char **arr, size_t lo, size_t hi)
+{
+	size_t	pivot;
+
+	if (lo >= hi)
+		return ;
+	pivot = partition(arr, lo, hi);
+	str_qsort(arr, lo, pivot);
+	str_qsort(arr, pivot + 1, hi);
 }
 
 static int	put_exp(void)
 {
-	t_buf	*sorted_buf;
-	char	**memory;
-	size_t	i;
+	extern t_shell_state	g_state;
+	char					**environ;
+	size_t					i;
 
-	sorted_buf = create_sorted_buf();
-	if (!sorted_buf)
+	environ = htable_to_environ(g_state.envp);
+	if (!environ)
 		return (1);
-	print_buf(sorted_buf);
-	memory = (char **)sorted_buf->data;
 	i = 0;
-	while (i < sorted_buf->cap)
+	while (environ[i])
+		i++;
+	if (!environ)
+		return (1);
+	str_qsort((const char **)environ, 0, i - 1);
+	i = 0;
+	while (environ[i])
 	{
-		if (memory[i])
-			free(memory[i]);
+		ft_printf("%s\n", environ[i]);
+		free(environ[i]);
 		i++;
 	}
-	return ((size_t) buf_del_return(sorted_buf, NULL, FREE_A | BDEL_A, 1));
-}
-
-static void	destroy_splitarr(char **arr)
-{
-	if (!arr)
-		return ;
-	free(arr[0]);
-	free(arr);
+	free(environ);
+	return (0);
 }
 
 static int	assign_value(char **var_val, char **value)
@@ -91,7 +102,8 @@ int	export_var(char **argv)
 			ft_htable_insert(g_state.envp, var_val[0], value);
 		else
 			ft_htable_insert(g_state.envp, var_val[0], NULL);
-		destroy_splitarr(var_val);
+		free(var_val[0]);
+		free(var_val);
 	}
 	return (0);
 }
