@@ -6,12 +6,12 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 10:15:17 by hseppane          #+#    #+#             */
-/*   Updated: 2023/03/20 09:17:06 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/06/05 11:37:02 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DYNARR_H
-# define DYNARR_H
+#ifndef BUF_H
+# define BUF_H
 
 # include <stdlib.h>
 # include <unistd.h>
@@ -22,7 +22,7 @@ typedef struct s_buf
 	size_t	stride;
 	size_t	size;
 	size_t	cap;
-}			t_buf;
+}	t_buf;
 
 int		buf_init(t_buf *arr, size_t size, size_t type_size);
 void	buf_del(t_buf *arr);
