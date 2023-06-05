@@ -56,6 +56,7 @@ BUILTIN_SRC:=\
 
 SRC :=\
 	main.c\
+	shell.c\
 	signal.c\
 	$(AST_SRC:%=$(AST_DIR)/%)\
 	$(TOKENIZER_SRC:%=$(TOKENIZER_DIR)/%)\

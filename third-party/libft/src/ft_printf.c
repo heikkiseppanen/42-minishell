@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/05 09:01:07 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/01 15:17:07 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/06/05 11:20:39 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	fprint_arg(int fd, va_list *args, char tok)
 	return (0);
 }
 
-static int ft_fprintf_va_list(int fd, const char *format, va_list *args)
+static int	ft_fprintf_va_list(int fd, const char *format, va_list *args)
 {
 	int	total_write;
 	int	token_length;
