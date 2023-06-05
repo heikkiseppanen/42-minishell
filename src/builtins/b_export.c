@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:09:17 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/05 16:00:35 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/05 16:06:02 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ static char	**get_key_value(char *arg)
 		i++;
 	}
 	key_value = ft_calloc(sizeof(char **) * 3, 1);
+	if (!key_value)
+		return (NULL);
 	key_value[2] = NULL;
 	if (!arg[i])
 	{
@@ -118,6 +120,11 @@ static char	**get_key_value(char *arg)
 		return (key_value);
 	}
 	key_value[0] = ft_calloc(i + 1, 1);
+	if (!key_value[0])
+	{
+		free(key_value);
+		return (NULL);
+	}
 	i = -1;
 	while (arg[++i] != '=')
 		key_value[0][i] = arg[i];
@@ -125,6 +132,12 @@ static char	**get_key_value(char *arg)
 	if (!arg[i + 1])
 		return (key_value);
 	key_value[1] = ft_calloc(ft_strlen(arg) - i + 1, 1);
+	if (!key_value[1])
+	{
+		free(key_value[0]);
+		free(key_value);
+		return (NULL);
+	}
 	j = 0;
 	while (arg[++i])
 	{
