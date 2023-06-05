@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:09:17 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/05 16:06:02 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/05 19:18:37 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,13 @@ static int	assign_value(char **var_val, char **value)
 {
 	size_t	i;
 
-	if (!var_val || !var_val[0])
+	if (!var_val)
 		return (0);
+	if (!var_val[0])
+	{
+		free(var_val);
+		return (0);
+	}
 	if (!var_val[1])
 		*value = ft_strdup("");
 	else
@@ -90,13 +95,52 @@ static int	assign_value(char **var_val, char **value)
 	return (1);
 }
 
+static const char **init_key_value(char *arg)
+{
+	size_t			arg_len;
+	const char		**key_value = ft_calloc(sizeof(char **) * 3, 1);
+
+	if (!key_value)
+		return (NULL);
+	if (!arg)
+	{
+		free(key_value);
+		return (NULL);
+	}
+	arg_len = ft_strlen(arg) + 1;
+	if (!arg_len)
+	{
+		free(key_value);
+		return (NULL);
+	}
+	if (!ft_isalpha(*arg) || !key_value)
+	{
+		free(key_value);
+		return (NULL);
+	}
+	key_value[0] = ft_calloc(arg_len, 1);
+	if (!key_value[0])
+	{
+		free(key_value);
+		return (NULL);
+	}
+	key_value[1] = ft_calloc(arg_len, 1);
+	if (!key_value[1])
+	{
+		free((void *)key_value[0]);
+		free(key_value);
+		return (NULL);
+	}
+	return (key_value);
+}
+
 static char	**get_key_value(char *arg)
 {
-	char	**key_value;
+	char	**key_value = (char **)init_key_value(arg);
 	size_t	i;
 	size_t	j;
 
-	if (!arg || !ft_isalpha(*arg))
+	if (!key_value)
 		return (NULL);
 	i = 0;
 	while (arg[i] && arg[i] != '=')
@@ -105,10 +149,6 @@ static char	**get_key_value(char *arg)
 			return (NULL);
 		i++;
 	}
-	key_value = ft_calloc(sizeof(char **) * 3, 1);
-	if (!key_value)
-		return (NULL);
-	key_value[2] = NULL;
 	if (!arg[i])
 	{
 		key_value[0] = ft_strdup(arg);
@@ -119,33 +159,17 @@ static char	**get_key_value(char *arg)
 		}
 		return (key_value);
 	}
-	key_value[0] = ft_calloc(i + 1, 1);
-	if (!key_value[0])
-	{
-		free(key_value);
-		return (NULL);
-	}
 	i = -1;
 	while (arg[++i] != '=')
 		key_value[0][i] = arg[i];
-	key_value[0][i] = '\0';
 	if (!arg[i + 1])
 		return (key_value);
-	key_value[1] = ft_calloc(ft_strlen(arg) - i + 1, 1);
-	if (!key_value[1])
-	{
-		free(key_value[0]);
-		free(key_value);
-		return (NULL);
-	}
 	j = 0;
 	while (arg[++i])
 	{
 		key_value[1][j] = arg[i];
 		j++;
 	}
-	key_value[1][j] = '\0';
-	ft_printf("key: %s\tvalue: %s\n", key_value[0], key_value[1]);
 	return (key_value);
 }
 
@@ -169,6 +193,7 @@ int	export_var(char **argv)
 		else
 			ft_htable_insert(g_state.envp, var_val[0], NULL);
 		free(var_val[0]);
+		free(var_val[2]);
 		free(var_val);
 	}
 	return (0);
