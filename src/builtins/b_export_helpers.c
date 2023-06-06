@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 12:31:00 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/06 13:58:49 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/06 15:50:42 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	str_qsort(const char **arr, size_t lo, size_t hi)
 	str_qsort(arr, pivot + 1, hi);
 }
 
-static void print_variable(char *environ)
+static void	print_variable(char *environ)
 {
 	size_t	i;
 
@@ -70,17 +70,18 @@ static void print_variable(char *environ)
 	ft_printf("\"\n");
 }
 
-void destroy_key_value(char **key_value)
+void	destroy_mult_value(void *one, void *two, void *three, void *four)
 {
-	if (!key_value)
+	if (one)
+		free(one);
+	else
 		return ;
-	if (key_value[0])
-		free(key_value[0]);
-	if (key_value[1])
-		free(key_value[1]);
-	if (key_value[2])
-		free(key_value[2]);
-	free(key_value);
+	if (two)
+		free(two);
+	if (three)
+		free(three);
+	if (four)
+		free(four);
 }
 
 int	put_exp(void)

@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:09:17 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/06 15:17:13 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/06 15:52:06 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	assign_value(char **var_val, char **value, unsigned char *valid)
 	return (1);
 }
 
-static const char **init_key_value(char *arg)
+static const char	**init_key_value(char *arg)
 {
 	size_t			arg_len;
 	const char		**key_value = ft_calloc(sizeof(char **) * 3, 1);
@@ -74,7 +74,7 @@ static char	**get_empty_key(char **key_value, char *arg)
 	tmp = ft_htable_get(g_state.envp, arg);
 	if (tmp && ft_memcmp(tmp, "", 2))
 	{
-		destroy_key_value(key_value);
+		destroy_mult_value(key_value, key_value[0], key_value[1], key_value[2]);
 		return (NULL);
 	}
 	free(key_value[0]);
@@ -92,31 +92,31 @@ static char	**get_empty_key(char **key_value, char *arg)
 
 static char	**get_key_value(char *arg, unsigned char *valid)
 {
-	char	**key_value = (char **)init_key_value(arg);
-	size_t	i;
-	size_t	j;
+	const char	**key_value = (const char **)init_key_value(arg);
+	size_t		i;
+	size_t		j;
 
 	if (!key_value)
 		return (NULL);
 	if ((!ft_isalpha(*arg) && *arg != '_'))
-		return (key_value + (*valid = 0));
+		return ((char **)key_value + (*valid = 0));
 	i = 0;
 	while (arg[++i] && arg[i] != '=')
 	{
 		if ((!ft_isalnum(arg[i]) && arg[i] != '='))
-			return (key_value + (*valid = 0));
+			return ((char **)key_value + (*valid = 0));
 	}
 	if (!arg[i])
-		return (get_empty_key(key_value, arg));
+		return (get_empty_key((char **)key_value, arg));
 	i = -1;
 	while (arg[++i] != '=')
-		key_value[0][i] = arg[i];
+		((char **)(key_value))[0][i] = arg[i];
 	if (!arg[i + 1])
-		return (key_value);
+		return ((char **)key_value);
 	j = 0;
 	while (arg[++i] && ++j)
-		key_value[1][j - 1] = arg[i];
-	return (key_value);
+		((char **)(key_value))[1][j - 1] = arg[i];
+	return ((char **)key_value);
 }
 
 int	export_var(char **argv)
@@ -132,20 +132,18 @@ int	export_var(char **argv)
 		return (put_exp());
 	while (argv[cur_arg++])
 	{
-		if (argv[cur_arg])
-			ft_printf("expanded string: %s\n", argv[cur_arg]);
 		valid = 1;
 		var_val = get_key_value(argv[cur_arg], &valid);
 		if (!valid)
 		{
-			destroy_key_value(var_val);
-			ft_fprintf(2, "minishell: export: `%s`: not a valid identifier\n", argv[cur_arg]);
+			destroy_mult_value(var_val, var_val[0], var_val[1], var_val[2]);
+			ft_fprintf(2, "minishell: export: `%s`: not a valid identifier\n",
+				argv[cur_arg]);
 		}
 		if (!assign_value(var_val, &value, &valid))
 			continue ;
 		ft_htable_insert(g_state.envp, var_val[0], value);
-		free(var_val[0]);
-		free(var_val);
+		destroy_mult_value(var_val, var_val[0], NULL, NULL);
 	}
 	return (0);
 }
