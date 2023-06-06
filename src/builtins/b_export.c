@@ -157,6 +157,13 @@ static char	**get_key_value(char *arg)
 			free(key_value);
 			return (NULL);
 		}
+    key_value[1] = ft_strdup("");
+		if (!key_value[1])
+		{
+			free(key_value[0]);
+			free(key_value);
+			return (NULL);
+		}
 		return (key_value);
 	}
 	i = -1;
@@ -188,7 +195,7 @@ int	export_var(char **argv)
 		var_val = get_key_value(argv[cur_arg]);
 		if (!assign_value(var_val, &value))
 			return (1);
-		if (!var_val[1] || ft_strchr(argv[cur_arg], '='))
+		if (var_val[1])
 			ft_htable_insert(g_state.envp, var_val[0], value);
 		else
 			ft_htable_insert(g_state.envp, var_val[0], NULL);
