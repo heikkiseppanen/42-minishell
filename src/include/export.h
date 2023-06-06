@@ -1,0 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/06 12:31:30 by lsileoni          #+#    #+#             */
+/*   Updated: 2023/06/06 13:58:04 by lsileoni         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef EXPORT_H
+# define EXPORT_H
+# include "minishell.h"
+# include "libft.h"
+
+int	put_exp(void);
+void destroy_key_value(char **key_value);
+
+#endif

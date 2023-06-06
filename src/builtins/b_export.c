@@ -6,74 +6,18 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:09:17 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/06 12:28:18 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/06 14:40:16 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "export.h"
 #include "libft.h"
-#include "minishell.h"
-#include <stddef.h>
 
-static size_t	partition(const char **arr, size_t lo, size_t hi)
-{
-	const char		*pivot_value = arr[(hi - lo) / 2 + lo];
-	const size_t	pivot_len = ft_strlen(pivot_value);
-	const char		*tmp;
-
-	while (1)
-	{
-		while (ft_strncmp(arr[lo], pivot_value, pivot_len) < 0)
-			++lo;
-		while (ft_strncmp(arr[hi], pivot_value, pivot_len) > 0)
-			--hi;
-		if (lo >= hi)
-			return (hi);
-		tmp = arr[hi];
-		arr[hi] = arr[lo];
-		arr[lo] = tmp;
-	}
-}
-
-static void	str_qsort(const char **arr, size_t lo, size_t hi)
-{
-	size_t	pivot;
-
-	if (lo >= hi)
-		return ;
-	pivot = partition(arr, lo, hi);
-	str_qsort(arr, lo, pivot);
-	str_qsort(arr, pivot + 1, hi);
-}
-
-static int	put_exp(void)
-{
-	extern t_shell_state	g_state;
-	char					**environ;
-	size_t					i;
-
-	environ = htable_to_environ(g_state.envp);
-	if (!environ)
-		return (1);
-	i = 0;
-	while (environ[i])
-		i++;
-	str_qsort((const char **)environ, 0, i - 1);
-	i = 0;
-	while (environ[i])
-	{
-		ft_printf("declare -x %s\n", environ[i]);
-		free(environ[i]);
-		i++;
-	}
-	free(environ);
-	return (0);
-}
-
-static int	assign_value(char **var_val, char **value)
+static int	assign_value(char **var_val, char **value, unsigned char *valid)
 {
 	size_t	i;
 
-	if (!var_val)
+	if (!var_val || !(*valid))
 		return (0);
 	if (!var_val[0])
 	{
@@ -110,7 +54,7 @@ static const char **init_key_value(char *arg)
 	arg_len = ft_strlen(arg) + 1;
 	key_value[0] = ft_calloc(arg_len, 1);
 	key_value[1] = ft_calloc(arg_len, 1);
-	if (!key_value[0] || !key_value[1] || !ft_isalpha(*arg))
+	if (!key_value[0] || !key_value[1])
 	{
 		if (key_value[0])
 			free((void *)key_value[0]);
@@ -124,6 +68,15 @@ static const char **init_key_value(char *arg)
 
 static char	**get_empty_key(char **key_value, char *arg)
 {
+	extern t_shell_state	g_state;
+	char					*tmp;
+
+	tmp = ft_htable_get(g_state.envp, arg);
+	if (tmp && ft_memcmp(tmp, "", 2))
+	{
+		destroy_key_value(key_value);
+		return (NULL);
+	}
 	free(key_value[0]);
 	key_value[0] = NULL;
 	key_value[0] = ft_strdup(arg);
@@ -137,7 +90,7 @@ static char	**get_empty_key(char **key_value, char *arg)
 	return (key_value);
 }
 
-static char	**get_key_value(char *arg)
+static char	**get_key_value(char *arg, unsigned char *valid)
 {
 	char	**key_value = (char **)init_key_value(arg);
 	size_t	i;
@@ -145,11 +98,12 @@ static char	**get_key_value(char *arg)
 
 	if (!key_value)
 		return (NULL);
-	i = 0;
+	i = 1;
 	while (arg[i] && arg[i] != '=')
 	{
-		if (!ft_isalnum(arg[i]) && arg[i] != '=')
-			return (NULL);
+		if ((!ft_isalnum(arg[i]) && arg[i] != '=')
+				|| (!ft_isalpha(*arg) && *arg != '_'))
+			return (key_value + (*valid = 0));
 		i++;
 	}
 	if (!arg[i])
@@ -171,15 +125,22 @@ int	export_var(char **argv)
 	char					**var_val;
 	char					*value;
 	size_t					cur_arg;
+	unsigned char			valid;
 
 	cur_arg = 0;
 	if (!argv[1])
 		return (put_exp());
 	while (argv[cur_arg++])
 	{
-		var_val = get_key_value(argv[cur_arg]);
-		if (!assign_value(var_val, &value))
-			return (1);
+		valid = 1;
+		var_val = get_key_value(argv[cur_arg], &valid);
+		if (!valid)
+		{
+			destroy_key_value(var_val);
+			ft_fprintf(2, "minishell: export: `%s`: not a valid identifier\n", argv[cur_arg]);
+		}
+		if (!assign_value(var_val, &value, &valid))
+			continue ;
 		ft_htable_insert(g_state.envp, var_val[0], value);
 		free(var_val[0]);
 		free(var_val);

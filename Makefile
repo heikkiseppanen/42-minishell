@@ -50,6 +50,7 @@ BUILTIN_SRC:=\
 	b_echo.c\
 	b_env.c\
 	b_export.c\
+	b_export_helpers.c\
 	b_pwd.c\
 	b_unset.c\
 	b_exit.c\
