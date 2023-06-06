@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:09:17 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/06 14:40:16 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/06 15:17:13 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,13 +98,13 @@ static char	**get_key_value(char *arg, unsigned char *valid)
 
 	if (!key_value)
 		return (NULL);
-	i = 1;
-	while (arg[i] && arg[i] != '=')
+	if ((!ft_isalpha(*arg) && *arg != '_'))
+		return (key_value + (*valid = 0));
+	i = 0;
+	while (arg[++i] && arg[i] != '=')
 	{
-		if ((!ft_isalnum(arg[i]) && arg[i] != '=')
-				|| (!ft_isalpha(*arg) && *arg != '_'))
+		if ((!ft_isalnum(arg[i]) && arg[i] != '='))
 			return (key_value + (*valid = 0));
-		i++;
 	}
 	if (!arg[i])
 		return (get_empty_key(key_value, arg));
@@ -132,6 +132,8 @@ int	export_var(char **argv)
 		return (put_exp());
 	while (argv[cur_arg++])
 	{
+		if (argv[cur_arg])
+			ft_printf("expanded string: %s\n", argv[cur_arg]);
 		valid = 1;
 		var_val = get_key_value(argv[cur_arg], &valid);
 		if (!valid)
