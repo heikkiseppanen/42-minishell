@@ -71,18 +71,26 @@ void	*ft_htable_get(t_htable *table, const char *key)
 	return (NULL);
 }
 
-void	ft_htable_print(t_htable *table)
+void	ft_htable_destroy(t_htable *table, unsigned char destroy_value)
 {
-	unsigned int	i;
+	size_t	i;
 
 	i = 0;
 	while (i < table->cap)
 	{
 		if (table->memory[i])
-			ft_printf("key: %s\tvalue: %s\tindex: %d\n", \
-			table->memory[i]->key, (char *)table->memory[i]->value, i);
+		{
+			free((void *)table->memory[i]->key);
+			if (destroy_value)
+				free(table->memory[i]->value);
+			free(table->memory[i]);
+			table->memory[i] = NULL;
+		}
 		i++;
 	}
+  free(table->memory);
+  table->memory = NULL;
+	free(table);
 }
 
 int	ft_htable_remove(t_htable *table, const char *key)
