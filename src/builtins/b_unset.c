@@ -16,12 +16,11 @@ extern t_shell_state	g_state;
 
 int	unset_var(char	**argv)
 {
-	(void)argv;
+  argv++;
 	while (*argv)
 	{
-		if (ft_htable_remove(g_state.envp, *argv) == -1)
-			return (1);
-		argv++;
+		ft_htable_remove(g_state.envp, *argv);
+    argv++;
 	}
 	return (0);
 }
