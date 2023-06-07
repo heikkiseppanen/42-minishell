@@ -10,11 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "include/ft/htable.h"
 #include "libft.h"
 #include "minishell.h"
-#include <stddef.h>
-
-extern t_shell_state	g_state;
 
 static int	count_args(char **argv)
 {
@@ -26,28 +24,37 @@ static int	count_args(char **argv)
 	return (argc);
 }
 
+static void  clean_exit(int status)
+{
+  extern t_shell_state	g_state;
+
+  ft_htable_destroy(g_state.envp, 1);
+  exit(status);
+}
+
 int	exit_cmd(char **argv)
 {
 	const int	argc = count_args(argv);
+  extern t_shell_state	g_state;
 
 	if (argc >= 2)
 	{
 		if (!ft_strncmp(argv[1], "0", 1) && ft_strlen(argv[1]) == 1)
-			exit (0);
+			clean_exit(0);
 		g_state.pipeline_err = ft_atoi(argv[1]);
 		if (!g_state.pipeline_err)
 		{
 			ft_fprintf(2, "exit\nminishell: exit: too many aruments\n");
-			exit (255);
+			clean_exit(255);
 		}
 		if (argc > 2)
 		{
 			ft_fprintf(2, "exit\nminishell: exit: numeric argument required\n");
 			return (1);
 		}
-		exit (g_state.pipeline_err);
+		clean_exit(g_state.pipeline_err);
 	}
 	else
-		exit(g_state.pipeline_err);
+		clean_exit(g_state.pipeline_err);
 	return (0);
 }
