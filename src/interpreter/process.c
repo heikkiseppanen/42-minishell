@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:59:25 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/24 10:42:31 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/06/07 10:42:30 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ static char	*expand_executable_path(char *executable_path)
 	char					**it;
 	char					*new_path;
 
+	if (access(executable_path, F_OK) == 0)
+		return (executable_path);
 	paths = ft_split(ft_htable_get(g_state.envp, "PATH"), ':');
 	it = paths;
 	while (*it)
@@ -61,9 +63,12 @@ int	launch_executable(char **argv)
 		ft_strarr_del(environment);
 		return (1);
 	}
+	argv[0] = expand_executable_path(argv[0]);
 	if (access(argv[0], F_OK) != 0)
 	{
-		argv[0] = expand_executable_path(argv[0]);
+		ft_fprintf(2, "minishell: %s: command not found\n", argv[0]);
+		ft_strarr_del(environment);
+		return (127);
 	}
 	if (execve(argv[0], argv, environment) == -1)
 	{

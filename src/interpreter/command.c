@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:39:41 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/24 13:37:47 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/06/07 11:08:19 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,12 @@ static pid_t	create_fork(t_pipe *in, t_pipe *out, t_ast_node *redir)
 	if (process == 0)
 	{
 		register_handler(HANDLER_DFL);
-		if (in != NULL)
-			pipe_connect(in->read, STDIN_FILENO, in->write);
-		if (out != NULL)
-			pipe_connect(out->write, STDOUT_FILENO, out->read);
-		perform_redirections(redir);
+		if (in != NULL && !pipe_connect(in->read, STDIN_FILENO, in->write))
+			exit(1);
+		if (out != NULL && !pipe_connect(out->write, STDOUT_FILENO, out->read))
+			exit(1);
+		if (!perform_redirections(redir))
+			exit(1);
 	}
 	return (process);
 }

@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 12:10:16 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/29 11:23:53 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/06/07 10:44:07 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ static int	open_basic_file(const char *path, int flags)
 
 	if (file == -1)
 	{
+		ft_fprintf(STDERR_FILENO, "minishell: ");
 		perror(path);
 	}
 	return (file);
