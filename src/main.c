@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "include/ft/htable.h"
 #include "sig.h"
 #include "tokenizer.h"
 #include "ast.h"
@@ -75,6 +76,7 @@ int	main(void)
 	}
 	shell_repl(&term);
 	write(1, "exit\n", 5);
+	ft_htable_destroy(g_state.envp, 1);
 	exit (g_state.pipeline_err);
 	return (0);
 }

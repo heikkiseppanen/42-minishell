@@ -12,15 +12,15 @@
 
 #include "minishell.h"
 
-extern t_shell_state	g_state;
-
 int	unset_var(char	**argv)
 {
-  argv++;
+	extern t_shell_state	g_state;
+
+	argv++;
 	while (*argv)
 	{
 		ft_htable_remove(g_state.envp, *argv);
-    argv++;
+		argv++;
 	}
 	return (0);
 }

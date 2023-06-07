@@ -15,7 +15,7 @@
 # include "minishell.h"
 # include "libft.h"
 
-int	put_exp(void);
-void destroy_mult_value(void *one, void *two, void *three, void *four);
+int		put_exp(void);
+void	destroy_mult_value(void *one, void *two, void *three, void *four);
 
 #endif

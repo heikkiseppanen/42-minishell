@@ -41,5 +41,7 @@ int			ft_htable_insert(t_htable *table, const char *key, void *value);
 void		*ft_htable_get(t_htable *table, const char *key);
 void		ft_htable_print(t_htable *table);
 int			ft_htable_remove(t_htable *table, const char *key);
+void		ft_htable_destroy(t_htable *table, unsigned char destroy_value);
+int			remove_htable_elem(t_htable *table, unsigned long long key_hash);
 
 #endif

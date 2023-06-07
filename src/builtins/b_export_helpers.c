@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "export.h"
-#include <stddef.h>
 
 static size_t	partition(const char **arr, size_t lo, size_t hi)
 {
