@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../libft.h"
-#include <stddef.h>
 
 t_htable	*ft_htable_create(unsigned int init_size)
 {
@@ -71,9 +70,9 @@ void	*ft_htable_get(t_htable *table, const char *key)
 	return (NULL);
 }
 
-void	ft_htable_destroy(t_htable *table, unsigned char destroy_value)
+void  ft_htable_destroy(t_htable *table, unsigned char destroy_value)
 {
-	size_t	i;
+	size_t  i;
 
 	i = 0;
 	while (i < table->cap)
