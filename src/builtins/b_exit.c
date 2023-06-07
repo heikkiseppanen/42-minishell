@@ -24,18 +24,18 @@ static int	count_args(char **argv)
 	return (argc);
 }
 
-static void  clean_exit(int status)
+static void	clean_exit(int status)
 {
-  extern t_shell_state	g_state;
+	extern t_shell_state	g_state;
 
-  ft_htable_destroy(g_state.envp, 1);
-  exit(status);
+	ft_htable_destroy(g_state.envp, 1);
+	exit(status);
 }
 
 int	exit_cmd(char **argv)
 {
-	const int	argc = count_args(argv);
-  extern t_shell_state	g_state;
+	extern t_shell_state	g_state;
+	const int				argc = count_args(argv);
 
 	if (argc >= 2)
 	{

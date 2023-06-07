@@ -16,7 +16,7 @@
 
 typedef struct s_sym_state
 {
-  t_buf *buf;
+	t_buf	*buf;
 	int		open;
 	int		i;
 	char	openchar;
