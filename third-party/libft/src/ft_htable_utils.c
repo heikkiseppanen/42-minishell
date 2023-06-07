@@ -52,27 +52,41 @@ int	ft_restructure_table(t_htable *table, const char *key, void *value)
 	return (1);
 }
 
+int	remove_htable_elem(t_htable *table, unsigned long long key_hash)
+{
+	free((void *)table->memory[key_hash % table->cap]->key);
+	free(table->memory[key_hash % table->cap]->value);
+	free(table->memory[key_hash % table->cap]);
+	table->memory[key_hash % table->cap] = NULL;
+	return (0);
+}
+
+static int	assign_value(t_htable *table, const char *key,
+						char *value, size_t index)
+{
+	char	*dup_key;
+
+	dup_key = ft_strdup(key);
+	if (!(dup_key))
+		return (-1);
+	table->memory[index] = malloc(sizeof(t_htelem));
+	table->memory[index]->key = dup_key;
+	table->memory[index]->value = value;
+	table->size++;
+	return (1);
+}
+
 int	ft_probe_table(t_htable *table, const char *key, void *value)
 {
 	unsigned long long	key_hash;
 	unsigned long long	index;
-	char				*dup_key;
 
 	key_hash = get_message_hash(key);
 	while (1)
 	{
 		index = key_hash % table->cap;
 		if (!table->memory[index])
-		{
-			dup_key = ft_strdup(key);
-			if (!dup_key)
-				return (-1);
-			table->memory[index] = malloc(sizeof(t_htelem));
-			table->memory[index]->key = dup_key;
-			table->memory[index]->value = value;
-			table->size++;
-			break ;
-		}
+			return (assign_value(table, key, value, index));
 		else if (!ft_strncmp(key, table->memory[index]->key, \
 					ft_strlen(key)))
 		{

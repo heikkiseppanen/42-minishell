@@ -59,7 +59,8 @@ void	*ft_htable_get(t_htable *table, const char *key)
 		{
 			a_len = ft_strlen(key);
 			t_len = ft_strlen(table->memory[key_hash % table->cap]->key);
-			if (!ft_strncmp(key, table->memory[key_hash % table->cap]->key, t_len)
+			if (!ft_strncmp(key,
+					table->memory[key_hash % table->cap]->key, t_len)
 				&& t_len == a_len)
 				return (table->memory[key_hash % table->cap]->value);
 		}
@@ -70,9 +71,9 @@ void	*ft_htable_get(t_htable *table, const char *key)
 	return (NULL);
 }
 
-void  ft_htable_destroy(t_htable *table, unsigned char destroy_value)
+void	ft_htable_destroy(t_htable *table, unsigned char destroy_value)
 {
-	size_t  i;
+	size_t	i;
 
 	i = 0;
 	while (i < table->cap)
@@ -87,8 +88,8 @@ void  ft_htable_destroy(t_htable *table, unsigned char destroy_value)
 		}
 		i++;
 	}
-  free(table->memory);
-  table->memory = NULL;
+	free(table->memory);
+	table->memory = NULL;
 	free(table);
 }
 
@@ -107,13 +108,7 @@ int	ft_htable_remove(t_htable *table, const char *key)
 		{
 			if (!ft_strncmp(key, table->memory[key_hash % table->cap]->key, \
 						ft_strlen(key)))
-			{
-				free((void *)table->memory[key_hash % table->cap]->key);
-				free(table->memory[key_hash % table->cap]->value);
-				free(table->memory[key_hash % table->cap]);
-				table->memory[key_hash % table->cap] = NULL;
-				return (0);
-			}
+				return (remove_htable_elem(table, key_hash));
 		}
 		key_hash++;
 		if (table->memory[key_hash % table->cap] == orig_elem)
