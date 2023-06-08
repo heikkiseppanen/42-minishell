@@ -13,8 +13,6 @@
 #include <stdio.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <dirent.h>
 #include "libft.h"
 #include "minishell.h"
