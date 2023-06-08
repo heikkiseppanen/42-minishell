@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "minishell.h"
 
 #include <stdio.h>
@@ -18,19 +19,27 @@ t_shell_state	g_state;
 
 static int	increment_shlvl(void)
 {
+	char			*level;
 	char			*tmp;
 	int				shlvl;
 
 	tmp = ft_htable_get(g_state.envp, "SHLVL");
 	if (!tmp)
 	{
-		ft_htable_insert(g_state.envp, "SHLVL", ft_itoa(1));
+		level = ft_itoa(1);
+		if (!level)
+			return (0);
+		if (ft_htable_insert(g_state.envp, "SHLVL", level) == -1)
+			return (0);
 		return (1);
 	}
 	shlvl = ft_atoi(tmp);
 	if (ft_htable_remove(g_state.envp, "SHLVL") == -1)
 		return (0);
-	if (!ft_htable_insert(g_state.envp, "SHLVL", ft_itoa(shlvl + 1)))
+	level = ft_itoa(shlvl + 1);
+	if (!level)
+		return (0);
+	if (ft_htable_insert(g_state.envp, "SHLVL", level) == -1)
 		return (0);
 	return (1);
 }
@@ -58,10 +67,31 @@ static t_err	init_envp(void)
 	return (MS_SUCCESS);
 }
 
+static int	assign_value_to_htable(t_htable *envp, char **env,
+									 unsigned int i, unsigned int j)
+{
+	char			*tmp;
+
+	tmp = ft_strjoin(envp->memory[i]->key, "=");
+	if (!tmp)
+	{
+		ft_strarr_del(env);
+		return (0);
+	}
+	env[j] = ft_strjoin(tmp, envp->memory[i]->value);
+	if (!env[j])
+	{
+		free(tmp);
+		ft_strarr_del(env);
+		return (0);
+	}
+	free(tmp);
+	return (1);
+}
+
 char	**htable_to_environ(t_htable *envp)
 {
 	char			**env;
-	char			*tmp;
 	unsigned int	i;
 	unsigned int	j;
 
@@ -74,9 +104,8 @@ char	**htable_to_environ(t_htable *envp)
 	{
 		if (envp->memory[i])
 		{
-			tmp = ft_strjoin(envp->memory[i]->key, "=");
-			env[j] = ft_strjoin(tmp, envp->memory[i]->value);
-			free(tmp);
+			if (!assign_value_to_htable(envp, env, i, j))
+				return (NULL);
 			j++;
 		}
 		i++;
