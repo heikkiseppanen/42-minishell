@@ -78,7 +78,7 @@ static int	update_env(char *old_pwd, char *buf)
 int	change_directory(char **argv)
 {
 	DIR		*t_dir;
-	char	buf[1025];
+	char	buf[4096];
 	char	*old_pwd;
 
 	old_pwd = get_pwd();
