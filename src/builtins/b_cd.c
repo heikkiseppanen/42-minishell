@@ -57,6 +57,7 @@ static int	go_home(void)
 	}
 	if (chdir(ft_htable_get(g_state.envp, "HOME")) != 0)
 		return (0);
+	perror("minishell: cd");
 	return (1);
 }
 
