@@ -20,7 +20,7 @@ int	parse_echostr(char **argv, t_buf *buf, int *nline_flag)
 	i = 1;
 	while (argv[i])
 	{
-		if (!ft_strncmp(argv[i], "-n", 2) && i == 1 && ft_strlen(argv[i]) == 2)
+		if (!ft_strncmp(argv[i], "-n", 2) && i == 1)
 		{
 			*nline_flag = 1;
 			i++;
