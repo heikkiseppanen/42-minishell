@@ -67,7 +67,7 @@ static t_err	init_envp(void)
 }
 
 static int	assign_value_to_htable(t_htable *envp, char **env,
-									 unsigned int i, unsigned int j)
+									unsigned int i, unsigned int j)
 {
 	char			*tmp;
 

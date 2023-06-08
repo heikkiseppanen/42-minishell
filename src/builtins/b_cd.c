@@ -17,7 +17,6 @@
 #include "libft.h"
 #include "minishell.h"
 
-
 static int	error_return(char *old_pwd)
 {
 	if (old_pwd)
@@ -29,14 +28,14 @@ static int	error_return(char *old_pwd)
 static char	*get_pwd(void)
 {
 	extern t_shell_state	g_state;
-	char	*pwd;
-	char	*tmp;
-	char	buf[1025];
+	char					*pwd;
+	char					*tmp;
+	char					buf[4097];
 
 	pwd = ft_htable_get(g_state.envp, "PWD");
 	if (!pwd)
 	{
-		getcwd(buf, 1024);
+		getcwd(buf, 4096);
 		tmp = ft_strdup(buf);
 		if (!tmp)
 			return (NULL);
@@ -78,7 +77,7 @@ static int	update_env(char *old_pwd, char *buf)
 int	change_directory(char **argv)
 {
 	DIR		*t_dir;
-	char	buf[4096];
+	char	buf[4097];
 	char	*old_pwd;
 
 	old_pwd = get_pwd();
@@ -98,6 +97,6 @@ int	change_directory(char **argv)
 			return (error_return(old_pwd));
 		closedir(t_dir);
 	}
-	getcwd(buf, 1024);
+	getcwd(buf, 4096);
 	return (update_env(ft_strdup(old_pwd), ft_strdup(buf)));
 }

@@ -57,7 +57,7 @@ static int	process_tokenstream(t_sym_state *s_s, const char *string)
 }
 
 static char	*err_ret(t_sym_state *s, unsigned char destroy_buf,
-					 unsigned char free_buf)
+					unsigned char free_buf)
 {
 	if (destroy_buf)
 		buf_del(s->buf);
