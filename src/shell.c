@@ -12,7 +12,6 @@
 
 #include "libft.h"
 #include "minishell.h"
-
 #include <stdio.h>
 
 t_shell_state	g_state;
