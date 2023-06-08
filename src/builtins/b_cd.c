@@ -72,7 +72,7 @@ int	change_directory(char **argv)
 	if (!argv[1])
 	{
 		if (!go_home())
-			return (error_return(NULL));
+			return (1);
 	}
 	else
 	{
