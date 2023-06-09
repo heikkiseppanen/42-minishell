@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 08:38:53 by hseppane          #+#    #+#             */
-/*   Updated: 2023/06/05 11:19:28 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/06/09 10:16:22 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include "libft.h"
 #include "sig.h"
 #include "minishell.h"
-#include <stdlib.h>
 #include <stdio.h>
 #include <termios.h>
 #include <readline/readline.h>
