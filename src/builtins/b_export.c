@@ -6,12 +6,11 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:09:17 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/06 15:52:06 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/09 10:52:46 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "export.h"
-#include "libft.h"
 
 static int	assign_value(char **var_val, char **value, unsigned char *valid)
 {
@@ -78,7 +77,6 @@ static char	**get_empty_key(char **key_value, char *arg)
 		return (NULL);
 	}
 	free(key_value[0]);
-	key_value[0] = NULL;
 	key_value[0] = ft_strdup(arg);
 	if (!key_value[0])
 	{
