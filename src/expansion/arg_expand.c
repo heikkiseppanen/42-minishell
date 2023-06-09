@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/09 10:30:20 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/09 10:36:14 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,6 @@ static int	process_tokenstream(t_sym_state *s_s, const char *string)
 	return (1);
 }
 
-static char	*err_ret(t_sym_state *s)
-{
-	if (s->buf)
-		buf_del(s->buf);
-	perror("minishell");
-	return (NULL);
-}
-
 char	*arg_expand(const char *string)
 {
 	t_sym_state	s;
@@ -74,14 +66,13 @@ char	*arg_expand(const char *string)
 	s.open = -1;
 	s.openchar = 0;
 	s.buf = &buf;
-	if (!s.buf)
-		return (err_ret(&s));
-	if (!(buf_init(s.buf, 1024, 1)))
-		return (err_ret(&s));
-	if (!process_tokenstream(&s, string))
-		return (err_ret(&s));
-	if (!buf_pushback(s.buf, "", 1))
-		return (err_ret(&s));
+	if (!(buf_init(s.buf, 1024, 1)) || !process_tokenstream(&s, string)
+			|| !buf_pushback(s.buf, "", 1))
+	{
+		if (s.buf)
+			buf_del(s.buf);
+		perror("minishell");
+	}
 	expanded = ft_strdup((char *)s.buf->data);
 	if (!expanded)
 		perror("minishell");
