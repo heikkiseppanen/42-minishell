@@ -80,7 +80,7 @@ FT_LD := -L ./third-party/libft -lft
 
 CC := cc
 INCLUDE := -I $(FT_DIR) -I $(INCDIR)
-CFLAGS := -g -Wall -Werror -Wextra $(INCLUDE)
+CFLAGS := -Wall -Werror -Wextra $(INCLUDE)
 LDFLAGS := -L $(HOME)/.brew/Cellar/readline/8.2.1/lib -lreadline -lhistory $(FT_LD)
 
 # Rules
@@ -90,8 +90,8 @@ all: $(NAME)
 run: all
 	./$(NAME)
 
-debug: CFLAGS+= -fsanitize=address,undefined
-debug: LDFLAGS+= -fsanitize=address,undefined
+debug: CFLAGS+= -g -fsanitize=address,undefined
+debug: LDFLAGS+= -g -fsanitize=address,undefined
 debug: $(NAME)
 
 $(NAME): $(FT_AR) $(OBJ)
