@@ -36,6 +36,8 @@ static void	fill_list(size_t count, char **argv, char **complete_list)
 	size_t	i;
 	size_t	j;
 
+	if (!complete_list)
+		return ;
 	j = 0;
 	i = 0;
 	while (i < count)

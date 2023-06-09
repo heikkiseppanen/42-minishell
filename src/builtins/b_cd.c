@@ -13,13 +13,9 @@
 #include <stdio.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <dirent.h>
 #include "libft.h"
 #include "minishell.h"
-
-extern t_shell_state	g_state;
 
 static int	error_return(char *old_pwd)
 {
@@ -31,14 +27,15 @@ static int	error_return(char *old_pwd)
 
 static char	*get_pwd(void)
 {
-	char	*pwd;
-	char	*tmp;
-	char	buf[1025];
+	extern t_shell_state	g_state;
+	char					*pwd;
+	char					*tmp;
+	char					buf[4097];
 
 	pwd = ft_htable_get(g_state.envp, "PWD");
 	if (!pwd)
 	{
-		getcwd(buf, 1024);
+		getcwd(buf, 4096);
 		tmp = ft_strdup(buf);
 		if (!tmp)
 			return (NULL);
@@ -50,20 +47,39 @@ static char	*get_pwd(void)
 
 static int	go_home(void)
 {
+	extern t_shell_state	g_state;
+
 	if (!ft_htable_get(g_state.envp, "HOME"))
 	{
 		ft_fprintf(2, "minishell: cd: HOME not set");
 		return (0);
 	}
 	if (chdir(ft_htable_get(g_state.envp, "HOME")) != 0)
+	{
+		perror("minishell: cd");
 		return (0);
+	}
 	return (1);
+}
+
+static int	update_env(char *old_pwd, char *buf)
+{
+	extern t_shell_state	g_state;
+
+	ft_htable_insert(g_state.envp, "OLDPWD", old_pwd);
+	ft_htable_insert(g_state.envp, "PWD", buf);
+	if (!old_pwd || !buf)
+	{
+		perror("minishell: cd");
+		return (1);
+	}
+	return (0);
 }
 
 int	change_directory(char **argv)
 {
 	DIR		*t_dir;
-	char	buf[1025];
+	char	buf[4097];
 	char	*old_pwd;
 
 	old_pwd = get_pwd();
@@ -72,7 +88,7 @@ int	change_directory(char **argv)
 	if (!argv[1])
 	{
 		if (!go_home())
-			return (error_return(NULL));
+			return (1);
 	}
 	else
 	{
@@ -83,8 +99,6 @@ int	change_directory(char **argv)
 			return (error_return(old_pwd));
 		closedir(t_dir);
 	}
-	getcwd(buf, 1024);
-	ft_htable_insert(g_state.envp, "OLDPWD", ft_strdup(old_pwd));
-	ft_htable_insert(g_state.envp, "PWD", ft_strdup(buf));
-	return (0);
+	getcwd(buf, 4096);
+	return (update_env(ft_strdup(old_pwd), ft_strdup(buf)));
 }

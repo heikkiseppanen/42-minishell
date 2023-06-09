@@ -13,6 +13,7 @@
 #ifndef EXPAND_H
 # define EXPAND_H
 # include "libft.h"
+# include <stdio.h>
 
 typedef struct s_sym_state
 {
