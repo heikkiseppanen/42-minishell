@@ -6,12 +6,11 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 18:51:54 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/23 17:23:07 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/09 11:21:08 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/ft/htable.h"
-#include "libft.h"
 #include "minishell.h"
 
 static int	count_args(char **argv)
