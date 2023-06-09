@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 09:12:17 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/30 09:27:12 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/06/09 11:08:22 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "minishell.h"
 #include "sig.h"
 
-static const char	*parse_redirection_argument(t_token **iterator)
+static const char	*parse_redirection_arg(t_token **iterator, t_redir_op op)
 {
 	const char	*argument;
 
@@ -23,7 +23,14 @@ static const char	*parse_redirection_argument(t_token **iterator)
 		unexpect(*iterator);
 		return (NULL);
 	}
-	argument = token_to_str(*iterator);
+	if (op == REDIR_IN_HEREDOC)
+	{
+		argument = read_heredoc((*iterator)->begin, (*iterator)->size);
+	}
+	else
+	{
+		argument = token_to_str(*iterator);
+	}
 	*iterator += 1;
 	return (argument);
 }
@@ -86,15 +93,7 @@ t_err	parse_redirection(t_token **iterator, t_buf *redir_out)
 	{
 		return (MS_FAIL);
 	}
-	if (rd.operation == REDIR_IN_HEREDOC)
-	{
-		rd.argument = read_heredoc((*iterator)->begin, (*iterator)->size);
-		*iterator += 1;
-	}
-	else
-	{
-		rd.argument = parse_redirection_argument(iterator);
-	}
+	rd.argument = parse_redirection_arg(iterator, rd.operation);
 	if (!rd.argument || !buf_pushback(redir_out, &rd, 1))
 	{
 		return (MS_FAIL);
