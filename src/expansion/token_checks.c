@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 22:39:13 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/09 10:16:24 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/09 10:28:04 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ static int	check_questionmark(t_sym_state *s, char *env)
 	if (!p_err)
 	{
 		buf_del(s->buf);
-		free(s->buf);
 		s->buf = NULL;
 		free(env);
 		return (0);
@@ -31,7 +30,6 @@ static int	check_questionmark(t_sym_state *s, char *env)
 	if (!buf_pushback(s->buf, p_err, ft_strlen(p_err)))
 	{
 		buf_del(s->buf);
-		free(s->buf);
 		s->buf = NULL;
 		free(env);
 		free(p_err);
@@ -48,7 +46,6 @@ static int	check_null(t_sym_state *s, char *env)
 	if (!buf_pushback(s->buf, "$", 1))
 	{
 		buf_del(s->buf);
-		free(s->buf);
 		s->buf = NULL;
 		free(env);
 		return (0);
@@ -62,7 +59,6 @@ static int	check_other(t_sym_state *s, char *env, const char *string)
 	if (!buf_pushback(s->buf, (void *)((&string[s->i]) - 1), 2))
 	{
 		buf_del(s->buf);
-		free(s->buf);
 		s->buf = NULL;
 		free(env);
 		return (0);

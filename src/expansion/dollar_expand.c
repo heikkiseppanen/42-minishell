@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 22:35:52 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/09 10:16:25 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/09 10:27:48 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ static char	*alloc_env(t_sym_state *s, const char *string)
 	if (!res)
 	{
 		buf_del(s->buf);
-		free(s->buf);
 		s->buf = NULL;
 		return (NULL);
 	}
@@ -65,7 +64,6 @@ int	handle_exp(t_sym_state *s_s, const char *string)
 	if (!buf_pushback(s_s->buf, e_s.envres, ft_strlen(e_s.envres)))
 	{
 		buf_del(s_s->buf);
-		free(s_s->buf);
 		s_s->buf = NULL;
 		return (0);
 	}
