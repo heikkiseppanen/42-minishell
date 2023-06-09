@@ -30,6 +30,7 @@ INTERPRETER_SRC :=\
 	pipeline.c\
 	redirection.c\
 	command.c\
+	command_helpers.c\
 	process.c\
 
 IO_DIR := io
