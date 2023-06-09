@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/03 11:39:27 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/05 11:23:47 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/06/09 11:22:26 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define MINISHELL_H
 
 # include "typedef.h"
-
 # include <libft.h>
+# define DIR_MAX 4097
 
 typedef struct s_shell_state
 {
