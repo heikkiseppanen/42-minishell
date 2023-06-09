@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:07:10 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/09 11:23:11 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/09 14:45:59 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <unistd.h>
 #include "minishell.h"
 
-static int	error_return(char *old_pwd)
+static int	error_return(char *old_pwd, int perror_print)
 {
 	if (old_pwd)
 		free(old_pwd);
-	perror("minishell: cd");
+	if (perror_print)
+		perror("minishell: cd");
 	return (1);
 }
 
@@ -61,43 +63,54 @@ static int	go_home(void)
 	return (1);
 }
 
-static int	update_env(char *old_pwd, char *buf)
+static int	go_to_dir(char **argv, int *perror_print)
 {
-	extern t_shell_state	g_state;
+	DIR	*t_dir;
 
-	ft_htable_insert(g_state.envp, "OLDPWD", old_pwd);
-	ft_htable_insert(g_state.envp, "PWD", buf);
-	if (!old_pwd || !buf)
+	if (!argv[1][0])
 	{
-		perror("minishell: cd");
-		return (1);
+		*perror_print = 0;
+		return (0);
 	}
-	return (0);
+	*perror_print = 1;
+	if (access(argv[1], F_OK) == -1)
+		return (0);
+	t_dir = opendir(argv[1]);
+	if (!t_dir)
+		return (0);
+	if (chdir(argv[1]) != 0)
+	{
+		closedir(t_dir);
+		return (0);
+	}
+	closedir(t_dir);
+	return (1);
 }
 
 int	change_directory(char **argv)
 {
-	DIR		*t_dir;
-	char	buf[DIR_MAX];
-	char	*old_pwd;
+	extern t_shell_state	g_state;
+	char					buf[DIR_MAX];
+	char					*old_pwd;
+	int						perror_print;
 
 	old_pwd = get_pwd();
 	if (!old_pwd)
-		return (error_return(NULL));
+		return (error_return(NULL, 1));
 	if (!argv[1])
 	{
 		if (!go_home())
 			return (1);
 	}
-	else
-	{
-		t_dir = opendir(argv[1]);
-		if (!t_dir)
-			return (error_return(NULL));
-		if (chdir(argv[1]) != 0)
-			return (error_return(old_pwd));
-		closedir(t_dir);
-	}
+	else if (!go_to_dir(argv, &perror_print))
+		return (error_return(NULL, perror_print));
 	getcwd(buf, DIR_MAX - 1);
-	return (update_env(ft_strdup(old_pwd), ft_strdup(buf)));
+	ft_htable_insert(g_state.envp, "OLDPWD", old_pwd);
+	ft_htable_insert(g_state.envp, "PWD", buf);
+	if (!old_pwd)
+	{
+		perror("minishell: cd");
+		return (1);
+	}
+	return (0);
 }
