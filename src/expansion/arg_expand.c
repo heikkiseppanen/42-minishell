@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/09 10:36:53 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/09 10:39:02 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ char	*arg_expand(const char *string)
 		if (s.buf)
 			buf_del(s.buf);
 		perror("minishell");
+		return (NULL);
 	}
 	expanded = ft_strdup((char *)s.buf->data);
 	if (!expanded)
