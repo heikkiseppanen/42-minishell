@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 22:35:52 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/05/22 18:54:49 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/09 10:27:48 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ static char	*alloc_env(t_sym_state *s, const char *string)
 	if (!res)
 	{
 		buf_del(s->buf);
+		s->buf = NULL;
 		return (NULL);
 	}
 	return (res);
@@ -53,10 +54,7 @@ int	handle_exp(t_sym_state *s_s, const char *string)
 	if (!e_s.env)
 		return (0);
 	if (string[s_s->i] == '?' || !string[s_s->i] || !ft_isalpha(string[s_s->i]))
-	{
-		free(e_s.env);
 		return (check_first_tok(s_s, &e_s, string));
-	}
 	check_underscore(s_s, &e_s, string);
 	grab_env_str(s_s, &e_s, string);
 	e_s.envres = ft_htable_get(g_state.envp, e_s.env);
@@ -66,6 +64,7 @@ int	handle_exp(t_sym_state *s_s, const char *string)
 	if (!buf_pushback(s_s->buf, e_s.envres, ft_strlen(e_s.envres)))
 	{
 		buf_del(s_s->buf);
+		s_s->buf = NULL;
 		return (0);
 	}
 	if (!string[s_s->i])
