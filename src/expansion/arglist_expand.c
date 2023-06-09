@@ -6,11 +6,10 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 01:55:29 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/02 18:00:05 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/09 11:38:56 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "expand.h"
 
 int	only_quotes(char *str)

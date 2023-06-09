@@ -6,12 +6,11 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/09 10:39:02 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/09 11:38:59 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/ft/buf.h"
-#include "libft.h"
 #include "minishell.h"
 #include "expand.h"
 
