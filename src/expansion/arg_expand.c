@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 22:45:25 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/09 10:36:14 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/09 10:36:53 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char	*arg_expand(const char *string)
 	s.openchar = 0;
 	s.buf = &buf;
 	if (!(buf_init(s.buf, 1024, 1)) || !process_tokenstream(&s, string)
-			|| !buf_pushback(s.buf, "", 1))
+		|| !buf_pushback(s.buf, "", 1))
 	{
 		if (s.buf)
 			buf_del(s.buf);
