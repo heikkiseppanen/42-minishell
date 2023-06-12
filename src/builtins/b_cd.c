@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:07:10 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/09 14:45:59 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/12 10:11:29 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ int	change_directory(char **argv)
 	{
 		if (!go_home())
 			return (1);
+		return (0);
 	}
 	else if (!go_to_dir(argv, &perror_print))
 		return (error_return(NULL, perror_print));
