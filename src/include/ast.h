@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 11:23:45 by hseppane          #+#    #+#             */
-/*   Updated: 2023/05/29 14:46:00 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/06/12 09:46:28 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ t_err		parse_argument(t_token **iterator, t_buf *argv_out);
 t_err		parse_redirection(t_token **iterator, t_buf *redir_out);
 t_err		unexpect(const t_token *token);
 
-char		*read_heredoc(const char *eof, size_t size);
+char		*read_heredoc(const char *eof, size_t length);
 
 t_ast_node	*parse_pipeline(t_token **iterator);
 t_err		interpret_ast(t_ast_node *root);

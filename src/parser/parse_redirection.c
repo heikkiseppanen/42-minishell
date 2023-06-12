@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 09:12:17 by hseppane          #+#    #+#             */
-/*   Updated: 2023/06/09 11:08:22 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/06/12 09:48:44 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 static const char	*parse_redirection_arg(t_token **iterator, t_redir_op op)
 {
 	const char	*argument;
+	char		*eof;
 
 	if (!token_is(*iterator, TOK_WORD))
 	{
@@ -25,7 +26,9 @@ static const char	*parse_redirection_arg(t_token **iterator, t_redir_op op)
 	}
 	if (op == REDIR_IN_HEREDOC)
 	{
-		argument = read_heredoc((*iterator)->begin, (*iterator)->size);
+		eof = token_to_str(*iterator);
+		argument = read_heredoc(eof, (*iterator)->size);
+		free(eof);
 	}
 	else
 	{
