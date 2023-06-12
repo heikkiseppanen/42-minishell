@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:07:10 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/12 10:11:29 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/12 12:05:58 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include <unistd.h>
 #include "minishell.h"
 
 static int	error_return(char *old_pwd, int perror_print)
@@ -43,6 +42,7 @@ static char	*get_pwd(void)
 		ft_htable_insert(g_state.envp, "PWD", tmp);
 		pwd = ft_htable_get(g_state.envp, "PWD");
 	}
+	pwd = ft_strdup(pwd);
 	return (pwd);
 }
 
@@ -52,7 +52,7 @@ static int	go_home(void)
 
 	if (!ft_htable_get(g_state.envp, "HOME"))
 	{
-		ft_fprintf(2, "minishell: cd: HOME not set");
+		ft_fprintf(2, "minishell: cd: HOME not set\n");
 		return (0);
 	}
 	if (chdir(ft_htable_get(g_state.envp, "HOME")) != 0)
@@ -67,7 +67,7 @@ static int	go_to_dir(char **argv, int *perror_print)
 {
 	DIR	*t_dir;
 
-	if (!argv[1][0])
+	if (!argv[1][0] || !ft_memcmp(argv[1], ".", 2))
 	{
 		*perror_print = 0;
 		return (0);
@@ -95,23 +95,19 @@ int	change_directory(char **argv)
 	int						perror_print;
 
 	old_pwd = get_pwd();
+	perror_print = 1;
 	if (!old_pwd)
 		return (error_return(NULL, 1));
 	if (!argv[1])
 	{
-		if (!go_home())
-			return (1);
-		return (0);
+		go_home();
+		return (error_return(old_pwd, 0));
 	}
 	else if (!go_to_dir(argv, &perror_print))
-		return (error_return(NULL, perror_print));
+		return (error_return(old_pwd, perror_print));
 	getcwd(buf, DIR_MAX - 1);
 	ft_htable_insert(g_state.envp, "OLDPWD", old_pwd);
-	ft_htable_insert(g_state.envp, "PWD", buf);
-	if (!old_pwd)
-	{
-		perror("minishell: cd");
-		return (1);
-	}
+	if (ft_htable_insert(g_state.envp, "PWD", ft_strdup(buf)) == -1)
+		return (error_return(old_pwd, 1));
 	return (0);
 }
