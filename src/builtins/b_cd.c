@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:07:10 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/12 11:36:19 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/12 11:42:54 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include <unistd.h>
-#include "libft.h"
 #include "minishell.h"
 
 static int	error_return(char *old_pwd, int perror_print)
