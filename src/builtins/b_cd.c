@@ -6,7 +6,7 @@
 /*   By: lsileoni <lsileoni@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 04:07:10 by lsileoni          #+#    #+#             */
-/*   Updated: 2023/06/12 10:11:29 by lsileoni         ###   ########.fr       */
+/*   Updated: 2023/06/12 11:36:19 by lsileoni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <unistd.h>
+#include "libft.h"
 #include "minishell.h"
 
 static int	error_return(char *old_pwd, int perror_print)
@@ -67,7 +68,7 @@ static int	go_to_dir(char **argv, int *perror_print)
 {
 	DIR	*t_dir;
 
-	if (!argv[1][0])
+	if (!argv[1][0] || !ft_strncmp(argv[1], ".", 2))
 	{
 		*perror_print = 0;
 		return (0);
