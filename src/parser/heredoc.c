@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 10:12:55 by hseppane          #+#    #+#             */
-/*   Updated: 2023/06/05 11:41:41 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/06/12 09:46:18 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static char	*heredoc_readline(const char *prompt)
 	return (line);
 }
 
-static t_err	read_heredoc_to_buf(const char *eof, size_t size, t_buf *out)
+static t_err	read_heredoc_to_buf(const char *eof, size_t length, t_buf *out)
 {
 	extern t_shell_state	g_state;
 	char					*line;
@@ -42,7 +42,7 @@ static t_err	read_heredoc_to_buf(const char *eof, size_t size, t_buf *out)
 		line = heredoc_readline("heredoc> ");
 		if (g_state.heredoc_done)
 			break ;
-		if (line && ft_memcmp(line, eof, size) != 0)
+		if (line && ft_memcmp(line, eof, length + 1))
 		{
 			if (!buf_pushback(out, line, ft_strlen(line))
 				|| !buf_pushback(out, "\n", 1))
@@ -61,7 +61,7 @@ static t_err	read_heredoc_to_buf(const char *eof, size_t size, t_buf *out)
 	return (MS_FAIL);
 }
 
-char	*read_heredoc(const char *eof, size_t size)
+char	*read_heredoc(const char *eof, size_t length)
 {
 	extern t_shell_state	g_state;
 	t_buf					heredoc;
@@ -71,7 +71,7 @@ char	*read_heredoc(const char *eof, size_t size)
 		return (NULL);
 	}
 	register_handler(HANDLER_DOC);
-	if (read_heredoc_to_buf(eof, size, &heredoc) == MS_FAIL)
+	if (read_heredoc_to_buf(eof, length, &heredoc) == MS_FAIL)
 	{
 		g_state.pipeline_err = 1;
 		g_state.heredoc_done = 0;

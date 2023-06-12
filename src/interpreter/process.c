@@ -6,7 +6,7 @@
 /*   By: hseppane <marvin@42.ft>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:59:25 by hseppane          #+#    #+#             */
-/*   Updated: 2023/06/07 10:42:30 by hseppane         ###   ########.fr       */
+/*   Updated: 2023/06/12 10:42:55 by hseppane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@
 
 #include <stdio.h>
 
-static char	*str_extend(char *string, char *extension)
+static char	*make_path(char *path, const char *executable)
 {
 	char	*result;
 
-	result = ft_strjoin(string, extension);
-	free(string);
+	path = ft_strjoin(path, "/");
+	if (!path)
+		return (NULL);
+	result = ft_strjoin(path, executable);
+	free(path);
 	return (result);
 }
 
@@ -36,18 +39,19 @@ static char	*expand_executable_path(char *executable_path)
 		return (executable_path);
 	paths = ft_split(ft_htable_get(g_state.envp, "PATH"), ':');
 	it = paths;
-	while (*it)
+	while (paths && *it)
 	{
-		new_path = ft_strjoin(*it, "/");
-		new_path = str_extend(new_path, executable_path);
-		if (access(new_path, F_OK) == 0)
+		new_path = make_path(*(it++), executable_path);
+		if (new_path)
 		{
-			free(executable_path);
-			executable_path = new_path;
-			break ;
+			if (access(new_path, F_OK) == 0)
+			{
+				free(executable_path);
+				executable_path = new_path;
+				break ;
+			}
+			free(new_path);
 		}
-		free(new_path);
-		++it;
 	}
 	ft_strarr_del(paths);
 	return (executable_path);
@@ -64,7 +68,7 @@ int	launch_executable(char **argv)
 		return (1);
 	}
 	argv[0] = expand_executable_path(argv[0]);
-	if (access(argv[0], F_OK) != 0)
+	if (access(argv[0], F_OK) != 0 || !argv[0])
 	{
 		ft_fprintf(2, "minishell: %s: command not found\n", argv[0]);
 		ft_strarr_del(environment);
